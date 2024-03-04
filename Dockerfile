@@ -1,5 +1,5 @@
 # Use Puppeteer-specific Docker image
-FROM puppeteer/puppeteer:latest
+FROM ghcr.io/puppeteer/puppeteer:latest
 
 # Set working directory inside the container
 WORKDIR /app
