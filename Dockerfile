@@ -15,4 +15,4 @@ ENV PORT=8062
 EXPOSE $PORT
 
 # Command to run your application
-CMD ["node", "app.js"]
+ENTRYPOINT  ["node", "app.js"]
