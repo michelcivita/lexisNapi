@@ -73,6 +73,15 @@ pipelines:
                     - ansible dockerswarm2pro -i /ansibledefs/hosts -a "docker service update --with-registry-auth --image dckr-reg.lockton.com.br/$PROJECT_NAME:$IMAGE_TAG $PROJECT_NAME"
                 services:
                     - docker
+        servicels:
+            - step:
+                name: Check Services
+                runs-on: locktonbrasilrunner
+                script:
+                    - ansible dockerswarm3dev -i /ansibledefs/hosts -a "docker login dckr-reg.lockton.com.br --username $REG_USER --password $REG_P"
+                    - ansible dockerswarm3dev -i /ansibledefs/hosts -a "docker service create -d --publish target=80,published=$PROJECT_PORT --log-driver=gelf --log-opt gelf-address=udp://logserver.lockton.com.br:12201 --log-opt tag=$PROJECT_NAME-development --with-registry-auth --name $PROJECT_NAME-development dckr-reg.lockton.com.br/$PROJECT_NAME:$IMAGE_TAG"
+                services:
+                    - docker
         createdev:
             - step:
                 name: Create Dev Container
