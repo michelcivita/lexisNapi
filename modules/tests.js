@@ -1,9 +1,9 @@
-const https = require('https');
-const { port } = require('./modules/configuration');
+const http = require('http');
+const { port } = require('./configuration');
 
 const testSelf = async() => {
     console.log('sending request to self');
-    https.get(`http://127.0.0.1:${port}/download?busName=Equatorial&busCountry=Brazil`, res => {
+    http.get(`http://127.0.0.1:${port}/download?busName=Equatorial&busCountry=Brazil`, res => {
       let data = [];
       const headerDate = res.headers && res.headers.date ? res.headers.date : 'no response date';
       console.log('Status Code:', res.statusCode);
@@ -14,12 +14,7 @@ const testSelf = async() => {
       });
     
       res.on('end', () => {
-        console.log('Response ended: ');
-        const users = JSON.parse(Buffer.concat(data).toString());
-    
-        for(user of users) {
-          console.log(`Got user with id: ${user.id}, name: ${user.name}`);
-        }
+        console.log('Response ended: ', data);
       });
     }).on('error', err => {
       console.log('Error: ', err.message);
@@ -27,5 +22,5 @@ const testSelf = async() => {
 }
 
 module.exports = {
-    testSelf
+    testSelf: testSelf
 }
