@@ -8,5 +8,5 @@ app.get('/download', getDownload);
 
 app.listen(port, async () => {
     console.log(`Server is running on port ${port}`);
-    await testSelf();
+    // await testSelf();
 });
