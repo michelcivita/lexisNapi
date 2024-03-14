@@ -9,11 +9,11 @@ const getDownload = async (req, res) => {
         // remove outdated files
         await disposeOldFiles(busName, busCountry);
 
-        if (forceDownload || !fileExists(busName, busCountry)) {
+        // if (forceDownload || !fileExists(busName, busCountry)) {
             // donwload file
             await downloadPdf(busName, busCountry);
             await renameFile(busName, busCountry);
-        }
+        // }
         
         console.log('Sending Response');
         // Send the file as a response
