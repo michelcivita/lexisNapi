@@ -3,6 +3,9 @@ const { port } = require('./modules/configuration');
 const { getDownload } = require('./modules/endpoints');
 const { testSelf } = require('./modules/tests');
 
+var os = require("os");
+console.log('hostname:', os.hostname());
+
 const app = express();
 app.get('/download', getDownload);
 
