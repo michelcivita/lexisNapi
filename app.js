@@ -1,12 +1,44 @@
 const express = require('express');
+const swaggerJsDoc = require('swagger-jsdoc');
+const swaggerUi = require('swagger-ui-express');
 const { port } = require('./modules/configuration');
 const { getDownload } = require('./modules/endpoints');
 const { testSelf } = require('./modules/tests');
 
-var os = require("os");
-console.log('hostname:', os.hostname());
-
 const app = express();
+
+const swaggerOptions = {
+    swaggerDefinition: {
+        info: {
+            title: 'Lexis-Nexis-Api',
+            description: 'API para automatizar a obtenção de relatórios da Lexis Nexis',
+            servers: [`http://localhost:${port}`]
+        }
+    },
+    apis: ['app.js']
+}
+
+const swaggerDocs = swaggerJsDoc(swaggerOptions);
+app.use("/swagger", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
+
+// Routes
+/**
+ * @swagger
+ * /download:
+ *   get:
+ *     description: Busca o relatório do cliente informado.
+ *     parameters:
+ *       - in: query
+ *         name: busName
+ *         schema:
+ *           type: string
+ *         description: O cliente a ser consultado
+ *       - in: query
+ *         name: busCountry
+ *         schema:
+ *           type: string
+ *         description: O país a ser consultado
+ */
 app.get('/download', getDownload);
 
 app.listen(port, async () => {

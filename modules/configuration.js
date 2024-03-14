@@ -1,5 +1,5 @@
 const configs = {
-    defaultDownloadDirectory: 'C:\\Users\\RCosta\\Downloads',
+    defaultDownloadDirectory: '/home/seluser/Downloads',
     defaultFileName: 'Resultados.pdf',
     headless: true,
     baseUrl: 'https://bridger.lexisnexis.eu',
