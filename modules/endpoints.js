@@ -3,7 +3,7 @@ const { getFilePath, disposeOldFiles, fileExists, renameFile } = require('./file
 
 const getDownload = async (req, res) => {
     const { busName, busCountry, forceDownload } = req.query;
-    console.log(`Request received: ${busName}, ${busCountry}`);
+    console.log(`Request received: ${req.headers.host} ${busName}, ${busCountry}`);
 
     try {
         // remove outdated files

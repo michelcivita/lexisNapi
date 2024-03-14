@@ -2,10 +2,12 @@ const puppeteer = require('puppeteer');
 const appSettings = require('./configuration');
 
 async function downloadPdf(busName, busCountry) {
+    console.log('Starting file download');
     const browser = await puppeteer.launch({ 
         headless: appSettings.headless
     });
 
+    console.log('Opening browser');
     const page = (await browser.pages())[0];
 
     console.log(`Navigating to ${appSettings.baseUrl}`);
