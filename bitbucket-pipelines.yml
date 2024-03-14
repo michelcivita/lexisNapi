@@ -136,8 +136,7 @@ pipelines:
                 runs-on: locktonbrasilrunner
                 script:
                     - ansible dockerswarm3dev -i /ansibledefs/hosts -a "docker login dckr-reg.lockton.com.br --username $REG_USER --password $REG_P"
-                    - ansible dockerswarm3dev -i /ansibledefs/hosts -a "$EXEC_COMMAND"
-                    - ansible dockerswarm3dev -i /ansibledefs/hosts -a "docker exec -it  $PROJECT_NAME-development /bin/bash"
+                    - ansible dockerswarm3dev -i /ansibledefs/hosts -a "docker service exec -it  $PROJECT_NAME-development /bin/bash"
                     - ansible dockerswarm3dev -i /ansibledefs/hosts -a "ls"
                 services:
                     - docker
