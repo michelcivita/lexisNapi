@@ -44,7 +44,7 @@ app.get('/download', getDownload);
 
 app.listen(port, async () => {
     console.log(`Server is running on port ${port}`);
-    // await testSelf();
+    await testSelf();
     var a = fs.readdirSync('/home/pptruser');
     console.log('readdirSync', a);
 });

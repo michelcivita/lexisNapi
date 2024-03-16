@@ -6,7 +6,7 @@ async function downloadPdf(busName, busCountry) {
     try {
         const browser = await puppeteer.launch({ 
             headless: appSettings.headless,
-            args: ['--no-sandbox', '--disable-setuid-sandbox']
+            args: ['--no-sandbox'/*, '--disable-setuid-sandbox'*/]
         });
     
         console.log('Opening browser');
