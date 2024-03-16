@@ -19,6 +19,8 @@ const swaggerOptions = {
     apis: ['app.js']
 }
 
+
+
 const swaggerDocs = swaggerJsDoc(swaggerOptions);
 app.use("/swagger", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
@@ -44,14 +46,14 @@ app.get('/download', getDownload);
 
 app.listen(port, async () => {
     console.log(`Server is running on port ${port}`);
-    try{
-        await testSelf();
-    }catch(e){
-        console.log('error testSelf', e);
-    }
+    // try{
+    //     await testSelf();
+    // }catch(e){
+    //     console.log('error testSelf', e);
+    // }
     
     try{
-        var a = fs.readdirSync('../home/pptruser');
+        var a = fs.readdirSync('/home');
         console.log('readdirSync', a);
     }
     catch(ex){
