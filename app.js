@@ -50,6 +50,11 @@ app.listen(port, async () => {
     //     console.log('error testSelf', e);
     // }
     
-    var a = fs.readdirSync('./home/pptruser');
-    console.log('readdirSync', a);
+    try{
+        var a = fs.readdirSync('./home/pptruser');
+        console.log('readdirSync', a);
+    }
+    catch(ex){
+        console.log(ex);
+    }
 });
