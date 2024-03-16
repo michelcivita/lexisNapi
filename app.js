@@ -54,9 +54,9 @@ app.listen(port, async () => {
     
     try{
         // var a = fs.readdirSync('/home');
-        console.log(fs.readdirSync('/home/pptruser/', {recursive:true}));
-        console.log(fs.readdirSync('/home/pptruser/.profile', {recursive:true}));
-        console.log(fs.readdirSync('/home/pptruser/.cache/puppeteer', {recursive:true}));
+        console.log(fs.readdirSync('/home/pptruser'));
+        console.log(fs.readdirSync('/home/pptruser/.profile'));
+        console.log(fs.readdirSync('/home/pptruser/.cache/puppeteer'));
         // var c = fs.readdirSync('/home/node');
         // console.log('readdirSync', a);
         // console.log('readdirSync', c);
