@@ -53,12 +53,12 @@ app.listen(port, async () => {
     // }
     
     try{
-        var a = fs.readdirSync('/home');
-        var b = fs.readdirSync('/home/pptruser');
-        var c = fs.readdirSync('/home/node');
-        console.log('readdirSync', a);
+        // var a = fs.readdirSync('/home');
+        var b = fs.readdirSync('/home/pptruser', {recursive:true});
+        // var c = fs.readdirSync('/home/node');
+        // console.log('readdirSync', a);
         console.log('readdirSync', b);
-        console.log('readdirSync', c);
+        // console.log('readdirSync', c);
     }
     catch(ex){
         console.log(ex);
