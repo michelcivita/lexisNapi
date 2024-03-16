@@ -26,7 +26,13 @@ async function downloadPdf(busName, busCountry) {
             page.click("#Next"),
             page.waitForNavigation()
         ]);
-    
+
+        const client = await page.target().createCDPSession()
+        await client.send('Page.setDownloadBehavior', {
+            behavior: 'allow',
+            downloadPath: appSettings.defaultDownloadDirectory,
+        });
+
         // Fill in password field
         await page.evaluate((password) => {
             document.getElementById('Password').value = password;
