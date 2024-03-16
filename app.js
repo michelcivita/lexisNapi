@@ -7,7 +7,7 @@ const { testSelf } = require('./modules/tests');
 const fs = require('fs');
 
 
-var a = fs.readdirSync('../home/seluser', { recursive: true });
+var a = fs.readdirSync('../home/seluser/');
 console.log('readdirSync', a);
 
 const app = express();
