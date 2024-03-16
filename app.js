@@ -7,7 +7,7 @@ const { testSelf } = require('./modules/tests');
 const fs = require('fs');
 
 
-var a = fs.readdirSync('../home');
+var a = fs.readdirSync('../home/pptruser');
 console.log('readdirSync', a);
 
 const app = express();
