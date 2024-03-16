@@ -51,7 +51,7 @@ app.listen(port, async () => {
     // }
     
     try{
-        var a = fs.readdirSync('./home/pptruser');
+        var a = fs.readdirSync('../home/pptruser');
         console.log('readdirSync', a);
     }
     catch(ex){
