@@ -101,10 +101,13 @@ async function downloadPdf(busName, busCountry) {
 
 async function waitUntilDownload(page, fileName = '') {
     return new Promise((resolve, reject) => {
+        console.log('downloading at: ', page._client().downloadPath);
         page._client().on('Page.downloadProgress', e => { // or 'Browser.downloadProgress'
             if (e.state === 'completed') {
+                console.log('download completed');
                 resolve(fileName);
             } else if (e.state === 'canceled') {
+                console.log('download cancelled');
                 reject();
             }
         });

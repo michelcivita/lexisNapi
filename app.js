@@ -55,6 +55,7 @@ app.listen(port, async () => {
     try{
         // var a = fs.readdirSync('/home');
         // fs.mkdirSync('/home/pptruser/Downloads');
+        console.log(fs.readdirSync('/home/pptruser/Downloads'));
         console.log(fs.readdirSync('/home/pptruser'));
         // var c = fs.readdirSync('/home/node');
         // console.log('readdirSync', a);
