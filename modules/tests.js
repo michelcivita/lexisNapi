@@ -3,6 +3,7 @@ const { port } = require('./configuration');
 
 const testSelf = async() => {
     console.log('sending request to self');
+    let ended = false;
     http.get(`http://localhost:${port}/download?busName=Equatorial&busCountry=Brazil`, res => {
       let data = [];
       const headerDate = res.headers && res.headers.date ? res.headers.date : 'no response date';
@@ -15,10 +16,22 @@ const testSelf = async() => {
     
       res.on('end', () => {
         console.log('Response ended: ', data);
+        ended = true;
       });
     }).on('error', err => {
       console.log('Error: ', err.message);
+      ended = true;
     });
+
+    while(!ended){
+      await sleep(1000);
+    }
+}
+
+async function sleep(ms) {
+  return new Promise((resolve) => {
+      setTimeout(resolve, ms);
+  });
 }
 
 module.exports = {
