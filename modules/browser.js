@@ -1,5 +1,6 @@
 const puppeteer = require('puppeteer');
 const appSettings = require('./configuration');
+const { sleep } = require('./utilities');
 
 async function downloadPdf(busName, busCountry) {
     console.log('Starting file download');
@@ -101,7 +102,6 @@ async function downloadPdf(busName, busCountry) {
 
 async function waitUntilDownload(page, fileName = '') {
     return new Promise((resolve, reject) => {
-        console.log('downloading at: ', page._client().downloadPath);
         page._client().on('Page.downloadProgress', e => { // or 'Browser.downloadProgress'
             if (e.state === 'completed') {
                 console.log('download completed');
@@ -114,11 +114,7 @@ async function waitUntilDownload(page, fileName = '') {
     });
 }
 
-async function sleep(ms) {
-    return new Promise((resolve) => {
-        setTimeout(resolve, ms);
-    });
-}
+
 
 module.exports = {
     downloadPdf: downloadPdf
