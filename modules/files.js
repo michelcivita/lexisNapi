@@ -20,7 +20,6 @@ const renameFile = async (busName, busCountry) =>
     });
 
 const checkDownloadDirectories = async () => {
-    let done = false;
     const today = new Date();
 
     console.log('checking default path:');
@@ -32,6 +31,8 @@ const checkDownloadDirectories = async () => {
         const oldPath = path.join(appSettings.defaultDownloadDirectory, getDate(lastClearDate));
         console.log('removing old files:');
 
+        let done = false;
+
         fs.rmdir(oldPath, (err) => {
             if(err) {
                 console.log('checkDownloadDirectory ERROR:', err);
@@ -40,10 +41,10 @@ const checkDownloadDirectories = async () => {
         });
 
         lastClearDate = today;
-    }
 
-    while(!done) {
-        await(sleep(100));
+        while(!done) {
+            await(sleep(100));
+        }
     }
 }
 
