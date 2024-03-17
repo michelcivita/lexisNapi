@@ -15,13 +15,13 @@ const fileExists = (busName, busCountry) =>
 
 const renameFile = async (busName, busCountry) =>
     await fs.rename(getDownloadFilePath(), getFilePath(busName, busCountry), (err) => {
-        if ( err ) console.log('ERROR: ' + err);
+        if ( err ) console.log('renameFile ERROR: ' + err);
     });
 
 const disposeOldFiles = async(busName, busCountry) => {
     try {
         const oldFiles = [];
-        await fs.readdir(appSettings.defaultDownloadDirectory, function (err, files) {
+        fs.readdir(appSettings.defaultDownloadDirectory, function (err, files) {
             //handling error
             if (err) {
                 return console.log('Unable to scan directory: ' + err);

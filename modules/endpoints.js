@@ -7,7 +7,7 @@ const getDownload = async (req, res) => {
 
     try {
         // remove outdated files
-        await disposeOldFiles(busName, busCountry);
+        // await disposeOldFiles(busName, busCountry);
 
         // if (forceDownload || !fileExists(busName, busCountry)) {
             // donwload file
