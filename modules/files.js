@@ -83,7 +83,7 @@ const checkExists = async (path) => {
     let result = false;
 
     fs.exists(path, (exists) => {
-        done = false;
+        done = true;
         result = exists;
     });
     
