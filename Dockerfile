@@ -11,7 +11,7 @@ COPY . .
 # Install dependencies
 RUN npm install
 
-ENV PORT=8062
+ENV PORT=8071
 
 EXPOSE $PORT
 
