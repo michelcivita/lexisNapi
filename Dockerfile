@@ -13,7 +13,7 @@ RUN npm install
 
 ENV PORT=8071
 
-EXPOSE $PORT
+EXPOSE 8071
 
 # Command to run your application
 ENTRYPOINT  ["node", "app.js"]
