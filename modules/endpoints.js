@@ -6,11 +6,12 @@ const getDownload = async (req, res) => {
     console.log(`Request received: ${req.headers.host} ${busName}, ${busCountry}`);
 
     try {
+        let today = new Date();
         // remove outdated files
         await checkDownloadDirectories();
 
         console.log('checking if file exists');
-        if (!fileExists(busName, busCountry)) {
+        if (!fileExists(busName, busCountry, today)) {
             // donwload file
             await downloadPdf(busName, busCountry);
             await renameFile(busName, busCountry);
@@ -18,7 +19,7 @@ const getDownload = async (req, res) => {
         
         console.log('Sending Response');
         // Send the file as a response
-        res.sendFile(getFilePath(busName, busCountry));
+        res.sendFile(getFilePath(busName, busCountry, today));
     }
     catch ({ message }) {
         res.status(400).send({ error: message });

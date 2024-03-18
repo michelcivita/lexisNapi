@@ -8,18 +8,15 @@ let lastClearDate = new Date();
 const getDownloadFilePath = (date) =>
     path.join(appSettings.defaultDownloadDirectory, appSettings.defaultFileName);
 
-const getFilePath = (date, busName, busCountry) => 
+const getFilePath = (busName, busCountry, date) => 
     path.join(appSettings.defaultDownloadDirectory, getDate(date), `${busName}-${busCountry}-report-${getDate(date)}.pdf`);
 
-const fileExists = (busName, busCountry) => {
-    var a = fs.existsSync(getFilePath(busName, busCountry));
-    console.log('fileexists', { busName: busName, busCountry: busCountry, fileExists: fileexists });
-    return a;
-}
+const fileExists = (busName, busCountry, date) => 
+    fs.existsSync(getFilePath(busName, busCountry, date));
     
 
 const renameFile = async (busName, busCountry) =>
-    await fs.rename(getDownloadFilePath(), getFilePath(busName, busCountry), (err) => {
+    await fs.rename(getDownloadFilePath(), getFilePath(busName, busCountry, new Date()), (err) => {
         if ( err ) console.log('renameFile ERROR: ' + err);
     });
 
@@ -103,7 +100,11 @@ function datediff(first, second) {
     return Math.round((second - first) / (1000 * 60 * 60 * 24));
 }
 
-function getDate(date = new Date()) {
+function getDate(date) {
+    if(!date) {
+        date = new Date();
+    }
+
     var today = date;
     var dd = String(today.getDate()).padStart(2, '0');
     var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
