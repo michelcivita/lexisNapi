@@ -9,6 +9,7 @@ const getDownload = async (req, res) => {
         // remove outdated files
         await checkDownloadDirectories();
 
+        console.log('checking if file exists');
         if (!fileExists(busName, busCountry)) {
             // donwload file
             await downloadPdf(busName, busCountry);

@@ -11,8 +11,12 @@ const getDownloadFilePath = (date) =>
 const getFilePath = (date, busName, busCountry) => 
     path.join(appSettings.defaultDownloadDirectory, getDate(date), `${busName}-${busCountry}-report-${getDate(date)}.pdf`);
 
-const fileExists = (busName, busCountry) => 
-    fs.existsSync(getFilePath(busName, busCountry));
+const fileExists = (busName, busCountry) => {
+    var a = fs.existsSync(getFilePath(busName, busCountry));
+    console.log('fileexists', { busName: busName, busCountry: busCountry, fileExists: fileexists });
+    return a;
+}
+    
 
 const renameFile = async (busName, busCountry) =>
     await fs.rename(getDownloadFilePath(), getFilePath(busName, busCountry), (err) => {
