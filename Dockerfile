@@ -1,5 +1,5 @@
 # Use Puppeteer-specific Docker image
-FROM ghcr.io/puppeteer/puppeteer:latest
+FROM ghcr.io/puppeteer/puppeteer:latest as build-stage
 # FROM node:latest
 
 # Set working directory inside the container
@@ -15,5 +15,10 @@ ENV PORT=8071
 
 EXPOSE 8071
 
-# Command to run your application
-ENTRYPOINT  ["node", "app.js"]
+RUN npm start
+
+# nginx
+FROM nginx as production-stage
+RUN mkdir /app
+COPY --from=build-stage /app/dist /app
+COPY docker/nginx/nginx.conf /etc/nginx/nginx.conf
