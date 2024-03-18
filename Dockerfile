@@ -15,7 +15,7 @@ ENV PORT=8071
 
 EXPOSE 8071
 
-RUN npm start
+ENTRYPOINT [ "node", "app.js" ]
 
 # nginx
 FROM nginx as production-stage
