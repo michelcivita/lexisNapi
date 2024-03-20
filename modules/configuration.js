@@ -6,7 +6,7 @@ const configs = {
     clientId: 'LIGSLIMITEDGB',   
     userName: 'DLazarin01',
     password: '&sol42AL',
-    port: process.env.PORT || 8071
+    port: process.env.PORT || 8062
 }
 
 module.exports = configs;

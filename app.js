@@ -1,4 +1,5 @@
 const express = require('express');
+const cors = require('cors');
 const swaggerJsDoc = require('swagger-jsdoc');
 const swaggerUi = require('swagger-ui-express');
 const { port } = require('./modules/configuration');
@@ -7,6 +8,8 @@ const { testSelf } = require('./modules/tests');
 const fs = require('fs');
 
 const app = express();
+
+app.use(cors());
 
 const swaggerOptions = {
     swaggerDefinition: {
@@ -18,8 +21,6 @@ const swaggerOptions = {
     },
     apis: ['app.js']
 }
-
-
 
 const swaggerDocs = swaggerJsDoc(swaggerOptions);
 app.use("/swagger", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
