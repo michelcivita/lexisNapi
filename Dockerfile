@@ -1,18 +1,20 @@
-# Use Puppeteer-specific Docker image
-FROM ghcr.io/puppeteer/puppeteer:latest
-# FROM node:latest
+# Use the official Node.js image as the base image
+FROM node:14-alpine
 
-# Set working directory inside the container
+# Set the working directory in the container
 WORKDIR /app
 
-# Copy source code to container
-COPY . .
+# Copy package.json and package-lock.json to the working directory
+COPY package*.json ./
 
 # Install dependencies
 RUN npm install
 
-ENV PORT=8062
+# Copy the rest of the application code to the working directory
+COPY . .
 
-EXPOSE $PORT
+# Expose the port that your app runs on
+EXPOSE 8062
 
-CMD [ "node", "app.js" ]
+# Command to run the application
+CMD ["node", "app.js"]
