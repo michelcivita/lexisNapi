@@ -10,6 +10,44 @@ const fs = require('fs');
 const app = express();
 
 app.use(cors());
+// route not found
+app.use((req, res, next) => {
+    const error = new Error('Not found');
+    error.message = 'Invalid route';
+    error.status = 404;
+    next(error);
+   });
+
+  // log errors to console
+   app.use(logErrors);
+    //
+   app.use(clientErrorHandler);
+   app.use((error, req, res, next) => {
+   res.status(error.status || 500);
+     return res.json({
+     status:error.status || 500,
+     message: error.message,
+     error: {
+     error: error.message,
+     },
+   });
+  });
+
+// log errors to console
+function logErrors(err, req, res, next) {
+ console.error(err.stack);
+ next(err);
+}
+
+// error handling for xhr request
+function clientErrorHandler(err, req, res, next) {
+ if (req.xhr) {
+   //console.log('xhr request');
+   res.status(400).send({status: 400, message: "Bad request from client", error: err.message });
+ } else {
+   next(err);
+ }
+}
 
 const swaggerOptions = {
     swaggerDefinition: {
@@ -47,22 +85,4 @@ app.get('/download', getDownload);
 
 app.listen(port, async () => {
     console.log(`Server is running on port ${port}`);
-    try{
-        await testSelf();
-    }catch(e){
-        console.log('error testSelf', e);
-    }
-    
-    try{
-        // var a = fs.readdirSync('/home');
-        // fs.mkdirSync('/home/pptruser/Downloads');
-        console.log('downloads directory:', fs.readdirSync('/home/pptruser/Downloads'));
-        console.log('downloads directory:', fs.readdirSync('/home/pptruser/Downloads/20240318'));
-        // var c = fs.readdirSync('/home/node');
-        // console.log('readdirSync', a);
-        // console.log('readdirSync', c);
-    }
-    catch(ex){
-        console.log(ex);
-    }
 });
