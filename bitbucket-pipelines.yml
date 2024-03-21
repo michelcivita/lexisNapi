@@ -57,6 +57,15 @@ pipelines:
                     - ansible dockerswarm1hom -i /ansibledefs/hosts -a "docker service ls"
                 services:
                     - docker
+        homolog1ServiceInstall:
+            - step:
+                name: Service List Staging
+                runs-on: locktonbrasilrunner
+                script:
+                    - ansible dockerswarm1hom -i /ansibledefs/hosts -a "sudo apt-get install libcap2-bin"
+                    - ansible dockerswarm1hom -i /ansibledefs/hosts -a "sudo setcap cap_net_bind_service=+ep `readlink -f \`which node\``"
+                services:
+                    - docker
         homolog2DiskSpace:
             - step:
                 name: Disk Space Staging
