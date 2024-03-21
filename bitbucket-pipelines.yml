@@ -30,6 +30,15 @@ pipelines:
                     - ansible dockerswarm3dev -i /ansibledefs/hosts -a "df -h"
                 services:
                     - docker
+        dev3SystemPrune:
+            - step:
+                name: System Prune Development
+                runs-on: locktonbrasilrunner
+                script:
+                    - ansible dockerswarm3dev -i /ansibledefs/hosts -a "docker login dckr-reg.lockton.com.br --username $REG_USER --password $REG_P"
+                    - ansible dockerswarm3dev -i /ansibledefs/hosts -a "docker system prune -f"
+                services:
+                    - docker
         devZCustomCommand:
             - step:
                 name: Custom Command Development
@@ -56,6 +65,15 @@ pipelines:
                     - ansible dockerswarm1hom -i /ansibledefs/hosts -a "df -h"
                 services:
                     - docker
+        homolog3SystemPrune:
+            - step:
+                name: System Prune Staging
+                runs-on: locktonbrasilrunner
+                script:
+                    - ansible dockerswarm1hom -i /ansibledefs/hosts -a "docker login dckr-reg.lockton.com.br --username $REG_USER --password $REG_P"
+                    - ansible dockerswarm1hom -i /ansibledefs/hosts -a "docker system prune -f"
+                services:
+                    - docker
         homologZCustomCommand:
             - step:
                 name: Custom Command Staging
@@ -80,6 +98,15 @@ pipelines:
                 runs-on: locktonbrasilrunner
                 script:
                     - ansible dockerswarm2pro -i /ansibledefs/hosts -a "df -h"
+                services:
+                    - docker
+        prod3SystemPrune:
+            - step:
+                name: System Prune Production
+                runs-on: locktonbrasilrunner
+                script:
+                    - ansible dockerswarm2pro -i /ansibledefs/hosts -a "docker login dckr-reg.lockton.com.br --username $REG_USER --password $REG_P"
+                    - ansible dockerswarm2pro -i /ansibledefs/hosts -a "docker system prune -f"
                 services:
                     - docker
         prodZCustomCommand:
