@@ -27,7 +27,7 @@ pipelines:
                 name: Disk Space Development
                 runs-on: locktonbrasilrunner
                 script:
-                    - ansible dockerswarm3dev -i /ansibledefs/hosts -a "df -m"
+                    - ansible dockerswarm3dev -i /ansibledefs/hosts -a "df -h"
                 services:
                     - docker
         devZCustomCommand:
@@ -53,7 +53,7 @@ pipelines:
                 name: Disk Space Staging
                 runs-on: locktonbrasilrunner
                 script:
-                    - ansible dockerswarm1hom -i /ansibledefs/hosts -a "df -m"
+                    - ansible dockerswarm1hom -i /ansibledefs/hosts -a "df -h"
                 services:
                     - docker
         homologZCustomCommand:
@@ -79,7 +79,7 @@ pipelines:
                 name: Disk Space Production
                 runs-on: locktonbrasilrunner
                 script:
-                    - ansible dockerswarm2pro -i /ansibledefs/hosts -a "df -m"
+                    - ansible dockerswarm2pro -i /ansibledefs/hosts -a "df -h"
                 services:
                     - docker
         prodZCustomCommand:
