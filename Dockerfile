@@ -22,7 +22,7 @@ EXPOSE 8071
 
 FROM nginx as production-stage
 RUN mkdir /app
-COPY --from=build-stage /app/dist /app
+COPY --from=build-stage /app /app
 COPY docker/nginx/nginx.conf /etc/nginx/nginx.conf
 # Command to run the application
 CMD ["node", "app.js"]
