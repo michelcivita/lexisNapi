@@ -1,15 +1,11 @@
 const express = require('express');
-const cors = require('cors');
 const swaggerJsDoc = require('swagger-jsdoc');
 const swaggerUi = require('swagger-ui-express');
 const { port } = require('./modules/configuration');
 const { getDownload } = require('./modules/endpoints');
-const { testSelf } = require('./modules/tests');
-const fs = require('fs');
 
 const app = express();
 
-app.use(cors());
 // route not found
 app.use((req, res, next) => {
     const error = new Error('Not found');
