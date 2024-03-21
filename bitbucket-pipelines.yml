@@ -13,21 +13,21 @@ definitions:
 
 pipelines:
     custom:
-        dev1ServiceLs:
+        dev1ServiceList:
             - step:
-                name: Custom Command Development
+                name: Service List Development
                 runs-on: locktonbrasilrunner
                 script:
                     - ansible dockerswarm3dev -i /ansibledefs/hosts -a "docker login dckr-reg.lockton.com.br --username $REG_USER --password $REG_P"
                     - ansible dockerswarm3dev -i /ansibledefs/hosts -a "docker service ls"
                 services:
                     - docker
-        dev2DF:
+        dev2DiskSpace:
             - step:
-                name: Custom Command Development
+                name: Disk Space Development
                 runs-on: locktonbrasilrunner
                 script:
-                    - ansible dockerswarm3dev -i /ansibledefs/hosts -a "df -a"
+                    - ansible dockerswarm3dev -i /ansibledefs/hosts -a "df -m"
                 services:
                     - docker
         devZCustomCommand:
@@ -39,21 +39,21 @@ pipelines:
                     - ansible dockerswarm3dev -i /ansibledefs/hosts -a "$EXEC_COMMAND"
                 services:
                     - docker
-        homolog1ServiceLs:
+        homolog1ServiceList:
             - step:
-                name: Custom Command Staging
+                name: Service List Staging
                 runs-on: locktonbrasilrunner
                 script:
                     - ansible dockerswarm1hom -i /ansibledefs/hosts -a "docker login dckr-reg.lockton.com.br --username $REG_USER --password $REG_P"
                     - ansible dockerswarm1hom -i /ansibledefs/hosts -a "docker service ls"
                 services:
                     - docker
-        homolog2DF:
+        homolog2DiskSpace:
             - step:
-                name: Custom Command Development
+                name: Disk Space Staging
                 runs-on: locktonbrasilrunner
                 script:
-                    - ansible dockerswarm1hom -i /ansibledefs/hosts -a "df -a"
+                    - ansible dockerswarm1hom -i /ansibledefs/hosts -a "df -m"
                 services:
                     - docker
         homologZCustomCommand:
@@ -65,21 +65,21 @@ pipelines:
                     - ansible dockerswarm1hom -i /ansibledefs/hosts -a "$EXEC_COMMAND"
                 services:
                     - docker
-        prod1ServiceLs:
+        prod1ServiceList:
             - step:
-                name: Custom Command Production
+                name: Service List Production
                 runs-on: locktonbrasilrunner
                 script:
                     - ansible dockerswarm2pro -i /ansibledefs/hosts -a "docker login dckr-reg.lockton.com.br --username $REG_USER --password $REG_P"
                     - ansible dockerswarm2pro -i /ansibledefs/hosts -a "docker service ls"
                 services:
                     - docker
-        prod2DF:
+        prod2DiskSpace:
             - step:
-                name: Custom Command Development
+                name: Disk Space Production
                 runs-on: locktonbrasilrunner
                 script:
-                    - ansible dockerswarm2pro -i /ansibledefs/hosts -a "df -a"
+                    - ansible dockerswarm2pro -i /ansibledefs/hosts -a "df -m"
                 services:
                     - docker
         prodZCustomCommand:
