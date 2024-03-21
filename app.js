@@ -6,45 +6,6 @@ const { getDownload } = require('./modules/endpoints');
 
 const app = express();
 
-// route not found
-app.use((req, res, next) => {
-    const error = new Error('Not found');
-    error.message = 'Invalid route';
-    error.status = 404;
-    next(error);
-   });
-
-  // log errors to console
-   app.use(logErrors);
-    //
-   app.use(clientErrorHandler);
-   app.use((error, req, res, next) => {
-   res.status(error.status || 500);
-     return res.json({
-     status:error.status || 500,
-     message: error.message,
-     error: {
-     error: error.message,
-     },
-   });
-  });
-
-// log errors to console
-function logErrors(err, req, res, next) {
- console.error(err.stack);
- next(err);
-}
-
-// error handling for xhr request
-function clientErrorHandler(err, req, res, next) {
- if (req.xhr) {
-   //console.log('xhr request');
-   res.status(400).send({status: 400, message: "Bad request from client", error: err.message });
- } else {
-   next(err);
- }
-}
-
 const swaggerOptions = {
     swaggerDefinition: {
         info: {
