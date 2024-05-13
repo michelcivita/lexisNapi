@@ -18,15 +18,7 @@ pipelines:
                 name: Service List Development
                 runs-on: locktonbrasilrunner
                 script:
-                    - ansible dockerswarm3dev -i /ansibledefs/hosts -a "curl -X GET -u $REG_USER:$REG_P dckr-reg.lockton.com.br/v2/_catalog"
-                services:
-                    - docker
-        registryImageList2:
-            - step:
-                name: Service List Development
-                runs-on: locktonbrasilrunner
-                script:
-                    - ansible dockerswarm3dev -i /ansibledefs/hosts -a "curl -X GET -u $REG_USER:$REG_P localhost:5000/v2/_catalog"
+                    - ansible dockerswarm3dev -i /ansibledefs/hosts -a "curl -X GET -u $REG_USER:$REG_P dckr-reg.lockton.com.br:5000/v2/_catalog"
                 services:
                     - docker
         dev1ServiceList:
