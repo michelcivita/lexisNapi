@@ -29,6 +29,14 @@ pipelines:
                     - ansible dockerswarm3dev -i /ansibledefs/hosts -a "curl -X GET -u $REG_USER:$REG_P https://dckr-reg.lockton.com.br/v2/_catalog"
                 services:
                     - docker
+        registryImageList3:
+            - step:
+                name: Service List Development
+                runs-on: locktonbrasilrunner
+                script:
+                    - ansible dockerswarm3dev -i /ansibledefs/hosts -a "curl -X GET https://$REG_USER:$REG_P/dckr-reg.lockton.com.br/V2/_catalog"
+                services:
+                    - docker
         dev1ServiceList:
             - step:
                 name: Service List Development
