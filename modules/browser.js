@@ -114,8 +114,6 @@ async function waitUntilDownload(page, fileName = '') {
     });
 }
 
-
-
 module.exports = {
     downloadPdf: downloadPdf
 }
