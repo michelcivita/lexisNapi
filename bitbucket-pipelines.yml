@@ -51,7 +51,6 @@ pipelines:
                 name: System Prune Development
                 runs-on: locktonbrasilrunner
                 script:
-                    - ansible dockerswarm3dev -i /ansibledefs/hosts -a "docker login dckr-reg.lockton.com.br --username $REG_USER --password $REG_P"
                     - ansible dockerswarm3dev -i /ansibledefs/hosts -a "docker system prune -f"
                 services:
                     - docker
