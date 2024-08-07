@@ -33,13 +33,13 @@ pipelines:
             - step:
                 name: Registry Full Tag List
                 runs-on: locktonbrasilrunner
-                script:
-                    - apt-get install jq -y
-                    - IMAGELIST=$(curl -X GET -u $REG_USER:$REG_P https://dckr-reg.lockton.com.br/v2/_catalog | jq '.repositories[]')
-                    - echo $IMAGELIST
-                    - for image in $IMAGELIST;
-                    - echo $image;
-                    - done
+                script: >
+                    apt-get install jq -y
+                    IMAGELIST=$(curl -X GET -u $REG_USER:$REG_P https://dckr-reg.lockton.com.br/v2/_catalog | jq '.repositories[]')
+                    echo $IMAGELIST
+                    for image in $IMAGELIST;
+                    do echo $image;
+                    done
                 services:
                     - docker
         dev1ServiceList:
