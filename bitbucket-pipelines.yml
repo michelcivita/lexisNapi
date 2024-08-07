@@ -35,9 +35,9 @@ pipelines:
                 runs-on: locktonbrasilrunner
                 script:
                     - apt-get install jq -y
-                    - IMAGETAGLIST=$(curl -X GET -u $REG_USER:$REG_P https://dckr-reg.lockton.com.br/v2/_catalog | jq '.repositories[]')
-                    - echo $IMAGETAGLIST
-                    - for i in 1 2 3 4 5; do echo $i; done
+                    - IMAGELIST=$(curl -X GET -u $REG_USER:$REG_P https://dckr-reg.lockton.com.br/v2/_catalog | jq '.repositories[]')
+                    - echo $IMAGELIST
+                    - for image in $IMAGELIST; do image $i; done
                 services:
                     - docker
         dev1ServiceList:
