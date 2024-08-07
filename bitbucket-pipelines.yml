@@ -36,7 +36,7 @@ pipelines:
                 script:
                     - IMAGETAGLIST=$(ansible dockerswarm3dev -i /ansibledefs/hosts -a "curl -X GET -u $REG_USER:$REG_P https://dckr-reg.lockton.com.br/v2/_catalog")
                     - echo $IMAGETAGLIST
-                    - for i in 1 2 3 4 5; do echo "counter: $i" done
+                    - ansible dockerswarm3dev -i /ansibledefs/hosts -a "for i in 1 2 3 4 5; do echo \"counter: $i\" done"
                 services:
                     - docker
         dev1ServiceList:
