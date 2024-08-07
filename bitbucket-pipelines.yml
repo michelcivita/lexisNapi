@@ -34,7 +34,9 @@ pipelines:
                 name: Registry Full Tag List
                 runs-on: locktonbrasilrunner
                 script:
-                    - IMAGETAGLIST=$(ansible dockerswarm3dev -i /ansibledefs/hosts -a "curl -X GET -u $REG_USER:$REG_P https://dckr-reg.lockton.com.br/v2/_catalog")
+                    - apt-get update
+                    - apt-get install jq
+                    - IMAGETAGLIST=$(ansible dockerswarm3dev -i /ansibledefs/hosts -a "curl -X GET -u $REG_USER:$REG_P https://dckr-reg.lockton.com.br/v2/_catalog" | jq '.repositories[]')
                     - echo $IMAGETAGLIST
                     - for i in 1 2 3 4 5; do echo $i; done
                 services:
