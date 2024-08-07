@@ -26,7 +26,7 @@ pipelines:
                 name: Registry Project Tag List
                 runs-on: locktonbrasilrunner
                 script:
-                    - IMAGETAGLIST=$(ansible dockerswarm3dev -i /ansibledefs/hosts -a "curl -X GET -u $REG_USER:$REG_P https://dckr-reg.lockton.com.br/v2/$TARGET_PROJECT_NAME/tags/list")
+                    - ansible dockerswarm3dev -i /ansibledefs/hosts -a "curl -X GET -u $REG_USER:$REG_P https://dckr-reg.lockton.com.br/v2/$TARGET_PROJECT_NAME/tags/list"
                 services:
                     - docker
         registryImageFullTagList:
@@ -34,8 +34,7 @@ pipelines:
                 name: Registry Full Tag List
                 runs-on: locktonbrasilrunner
                 script:
-                    - ansible dockerswarm3dev -i /ansibledefs/hosts -a "curl -X GET -u $REG_USER:$REG_P https://dckr-reg.lockton.com.br/v2/_catalog"
-                    - ansible dockerswarm3dev -i /ansibledefs/hosts -a "jq '.repositories[]'"
+                    - IMAGETAGLIST=$(ansible dockerswarm3dev -i /ansibledefs/hosts -a "curl -X GET -u $REG_USER:$REG_P https://dckr-reg.lockton.com.br/v2/_catalog")
                 services:
                     - docker
         dev1ServiceList:
