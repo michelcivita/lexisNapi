@@ -34,7 +34,7 @@ pipelines:
                 name: Registry Full Tag List
                 runs-on: locktonbrasilrunner
                 script:
-                    - ansible dockerswarm3dev -i /ansibledefs/hosts -a "curl -X GET -u $REG_USER:$REG_P https://dckr-reg.lockton.com.br/v2/_catalog | jq '.repositories[]'"
+                    - ansible dockerswarm3dev -i /ansibledefs/hosts -a "(curl -X GET -u $REG_USER:$REG_P https://dckr-reg.lockton.com.br/v2/_catalog) | jq '.repositories[]'"
                 services:
                     - docker
         dev1ServiceList:
