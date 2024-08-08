@@ -35,12 +35,12 @@ pipelines:
                 runs-on: locktonbrasilrunner
                 script:
                     - apt-get install jq -y
-                    - IMAGELIST=$(curl -X GET -u $REG_USER:$REG_P https://dckr-reg.lockton.com.br/v2/_catalog | jq '.repositories[]')
-                    - echo $IMAGELIST
+                    - REPOSITORIES=$(curl -X GET -u $REG_USER:$REG_P https://dckr-reg.lockton.com.br/v2/_catalog | jq '.repositories[]')
+                    - echo $REPOSITORIES
                     - >
-                      for image in $IMAGELIST; do
-                        echo $image | tr -d '"'
-                        IMAGETAGLIST=$(curl -X GET -u $REG_USER:$REG_P https://dckr-reg.lockton.com.br/v2/$image/tags/list)
+                      for repo in $REPOSITORIES; do
+                        repo=$($repo | tr -d '"')
+                        IMAGETAGLIST=$(curl -X GET -u $REG_USER:$REG_P https://dckr-reg.lockton.com.br/v2/$repo/tags/list)
                         echo $IMAGETAGLIST
                         break
                       done
