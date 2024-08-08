@@ -35,18 +35,22 @@ pipelines:
                 runs-on: locktonbrasilrunner
                 script:
                     - apt-get install jq -y
+                    - echo "Fetching Repositories"
                     - REPOS=$(curl -X GET -u $REG_USER:$REG_P https://dckr-reg.lockton.com.br/v2/_catalog | jq '.repositories[]')
                     - echo $REPOS
                     - >
                       for repo in $REPOS; do
                         repo=$(echo $repo | tr -d '"')
+                        echo $repo
+                        echo "Fetching Tags"
                         TAGS=$(curl -X GET -u $REG_USER:$REG_P https://dckr-reg.lockton.com.br/v2/$repo/tags/list | jq '.tags[]')
                         echo $TAGS
                         for tag in $TAGS; do
                           tag=$(echo $tag | tr -d '"')
-                          date=$(curl -X HEAD -i -u $REG_USER:$REG_P https://dckr-reg.lockton.com.br/v2/$repo/manifests/$tag)
-                          manifest=$(curl -X GET -u $REG_USER:$REG_P https://dckr-reg.lockton.com.br/v2/$repo/manifests/$tag | jq -r '.history[].v1Compatibility' | jq '.created')
                           echo $tag
+                          echo "Fetching Tag Manifest"
+                          manifest=$(curl --head -i -u $REG_USER:$REG_P https://dckr-reg.lockton.com.br/v2/$repo/manifests/$tag)
+                          date=$(curl -X GET -u $REG_USER:$REG_P https://dckr-reg.lockton.com.br/v2/$repo/manifests/$tag | jq -r '.history[].v1Compatibility' | jq '.created')
                           echo $date
                           echo $manifest
                           break
