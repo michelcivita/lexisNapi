@@ -38,8 +38,11 @@ pipelines:
                     - IMAGELIST=$(curl -X GET -u $REG_USER:$REG_P https://dckr-reg.lockton.com.br/v2/_catalog | jq '.repositories[]')
                     - echo $IMAGELIST
                     - >
-                      for image in $IMAGELIST;
-                      do echo $image;
+                      for image in $IMAGELIST; do
+                        echo $image;
+                        IMAGETAGLIST=$(curl -X GET -u $REG_USER:$REG_P https://dckr-reg.lockton.com.br/v2/$image/tags/list);
+                        echo $IMAGETAGLIST
+                        break
                       done
                 services:
                     - docker
