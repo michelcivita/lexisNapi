@@ -39,8 +39,8 @@ pipelines:
                     - echo $IMAGELIST
                     - >
                       for image in $IMAGELIST; do
-                        echo ${image | tr -d '"'};
-                        IMAGETAGLIST=$(curl -X GET -u $REG_USER:$REG_P https://dckr-reg.lockton.com.br/v2/$image/tags/list);
+                        echo $image | tr -d '"'
+                        IMAGETAGLIST=$(curl -X GET -u $REG_USER:$REG_P https://dckr-reg.lockton.com.br/v2/$image/tags/list)
                         echo $IMAGETAGLIST
                         break
                       done
