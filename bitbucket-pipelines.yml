@@ -44,7 +44,10 @@ pipelines:
                         echo $TAGS
                         for tag in $TAGS; do
                           tag=$(echo $tag | tr -d '"')
-                          manifest=$(curl -X GET -u $REG_USER:$REG_P https://dckr-reg.lockton.com.br/v2/$repo/manifests/$tag)
+                          date=$(curl -X HEAD -i -u $REG_USER:$REG_P https://dckr-reg.lockton.com.br/v2/$repo/manifests/$tag)
+                          manifest=$(curl -X GET -u $REG_USER:$REG_P https://dckr-reg.lockton.com.br/v2/$repo/manifests/$tag | jq -r '.history[].v1Compatibility' | jq '.created')
+                          echo $tag
+                          echo $date
                           echo $manifest
                           break
                         done
