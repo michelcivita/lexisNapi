@@ -39,8 +39,8 @@ pipelines:
                     - echo $REPOSITORIES
                     - >
                       for repo in $REPOSITORIES; do
-                        repo=$($repo | tr -d '"')
-                        IMAGETAGLIST=$(curl -X GET -u $REG_USER:$REG_P https://dckr-reg.lockton.com.br/v2/$repo/tags/list)
+                        repo=$(echo $repo | tr -d '"')
+                        IMAGETAGLIST=$(curl -X GET -u $REG_USER:$REG_P https://dckr-reg.lockton.com.br/v2/repo/tags/list)
                         echo $IMAGETAGLIST
                         break
                       done
