@@ -35,13 +35,13 @@ pipelines:
                 runs-on: locktonbrasilrunner
                 script:
                     - apt-get install jq -y
-                    - REPOSITORIES=$(curl -X GET -u $REG_USER:$REG_P https://dckr-reg.lockton.com.br/v2/_catalog | jq '.repositories[]')
-                    - echo $REPOSITORIES
+                    - REPOS=$(curl -X GET -u $REG_USER:$REG_P https://dckr-reg.lockton.com.br/v2/_catalog | jq '.repositories[]')
+                    - echo $REPOS
                     - >
-                      for repo in $REPOSITORIES; do
+                      for repo in $REPOS; do
                         repo=$(echo $repo | tr -d '"')
-                        IMAGETAGLIST=$(curl -X GET -u $REG_USER:$REG_P https://dckr-reg.lockton.com.br/v2/$repo/tags/list)
-                        echo $IMAGETAGLIST
+                        TAGS=$(curl -X GET -u $REG_USER:$REG_P https://dckr-reg.lockton.com.br/v2/$repo/tags/list | jq '.tags[]')
+                        echo $TAGS
                         break
                       done
                 services:
