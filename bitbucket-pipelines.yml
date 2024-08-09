@@ -70,7 +70,6 @@ pipelines:
                               fi
                             done
                           fi
-                          break
                         done
                         break
                       done
