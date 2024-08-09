@@ -49,12 +49,16 @@ pipelines:
                           echo "Fetching Tag $tag digest"
                           headers=$(curl --head -i -u $REG_USER:$REG_P https://dckr-reg.lockton.com.br/v2/$repo/manifests/$tag)
                           date=$(curl -X GET -u $REG_USER:$REG_P https://dckr-reg.lockton.com.br/v2/$repo/manifests/$tag | jq -r '.history[0].v1Compatibility' | jq '.created')
-                          echo $date
-                          echo $headers
+                          echo "headers -> $headers"
+                          echo "tag date -> $date"
+                          digestNode=false
+                          digest=""
                           for header in $headers; do
-                            echo $header
                             if [ $header == "Docker-Content-Digest:" ]; then
-                              echo "next is digest id"
+                              digestNode=true
+                            elif [ digestNode ]; then
+                              digest=$header
+                              echo "tag digest -> $digest"
                             fi
                           done
                           break
