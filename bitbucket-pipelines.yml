@@ -56,9 +56,10 @@ pipelines:
                           for header in $headers; do
                             if [ $header == "Docker-Content-Digest:" ]; then
                               digestNode=true
-                            elif [ digestNode ]; then
+                            elif [ "$digestNode" == true ]; then
                               digest=$header
                               echo "tag digest -> $digest"
+                              break
                             fi
                           done
                           break
