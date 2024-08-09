@@ -51,11 +51,11 @@ pipelines:
                           tagdate=$(curl -X GET -u $REG_USER:$REG_P https://dckr-reg.lockton.com.br/v2/$repo/manifests/$tag | jq -r '.history[0].v1Compatibility' | jq '.created')
                           tagdate=$(echo $tagdate | tr -d '"')
                           year=$(date -d $tagdate +%Y)
-                          cutoutYear=$((date +%Y) - 1)
+                          cutoutYear=$(date +%Y)
                           echo "headers -> $headers"
                           echo "tag date -> $tagdate"
                           echo "cutout year -> $cutoutYear"
-                          if [ $year -le $cutoutYear ]; then
+                          if [ $year -le $(cutoutYear - 1) ]; then
                             echo "tag should be deleted"
                             digestNode=false
                             digest=""
