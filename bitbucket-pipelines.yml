@@ -18,7 +18,7 @@ pipelines:
                 name: Registry Project List
                 runs-on: locktonbrasilrunner
                 script:
-                    - ansible dockerswarm3dev -i /ansibledefs/hosts -a "curl -X GET -u $REG_USER:$REG_P https://dckr-reg.lockton.com.br/v2/_catalog"
+                    - ansible dockerswarm3dev -i /ansibledefs/hosts -a "curl -sS -X GET -u $REG_USER:$REG_P https://dckr-reg.lockton.com.br/v2/_catalog"
                 services:
                     - docker
         registryImageTagList:
@@ -26,7 +26,7 @@ pipelines:
                 name: Registry Project Tag List
                 runs-on: locktonbrasilrunner
                 script:
-                    - ansible dockerswarm3dev -i /ansibledefs/hosts -a "curl -X GET -u $REG_USER:$REG_P https://dckr-reg.lockton.com.br/v2/$TARGET_PROJECT_NAME/tags/list"
+                    - ansible dockerswarm3dev -i /ansibledefs/hosts -a "curl -sS -X GET -u $REG_USER:$REG_P https://dckr-reg.lockton.com.br/v2/$TARGET_PROJECT_NAME/tags/list"
                 services:
                     - docker
         registryImageFullTagList:
@@ -36,20 +36,20 @@ pipelines:
                 script:
                     - apt-get install jq -y
                     - echo "Fetching Repositories"
-                    - REPOS=$(curl -X GET -u $REG_USER:$REG_P https://dckr-reg.lockton.com.br/v2/_catalog | jq 'try .repositories[]')
+                    - REPOS=$(curl -sS -X GET -u $REG_USER:$REG_P https://dckr-reg.lockton.com.br/v2/_catalog | jq 'try .repositories[]')
                     - echo $REPOS
                     - DIGESTSTOREMOVE=""
                     - >
                       for repo in $REPOS; do
                         repo=$(echo $repo | tr -d '"')
                         echo "Fetching Repository $repo Tags"
-                        TAGS=$(curl -X GET -u $REG_USER:$REG_P https://dckr-reg.lockton.com.br/v2/$repo/tags/list | jq 'try .tags[]')
+                        TAGS=$(curl -sS -X GET -u $REG_USER:$REG_P https://dckr-reg.lockton.com.br/v2/$repo/tags/list | jq 'try .tags[]')
                         echo $TAGS
                         for tag in $TAGS; do
                           tag=$(echo $tag | tr -d '"')
                           # echo "Fetching Tag $tag digest"
-                          headers=$(curl --head -i -u $REG_USER:$REG_P https://dckr-reg.lockton.com.br/v2/$repo/manifests/$tag)
-                          tagdate=$(curl -X GET -u $REG_USER:$REG_P https://dckr-reg.lockton.com.br/v2/$repo/manifests/$tag | jq -r '.history[0].v1Compatibility' | jq '.created')
+                          headers=$(curl -sS --head -i -u $REG_USER:$REG_P https://dckr-reg.lockton.com.br/v2/$repo/manifests/$tag)
+                          tagdate=$(curl -sS -X GET -u $REG_USER:$REG_P https://dckr-reg.lockton.com.br/v2/$repo/manifests/$tag | jq -r '.history[0].v1Compatibility' | jq '.created')
                           tagdate=$(echo $tagdate | tr -d '"')
                           year=$(date -d $tagdate +%Y)
                           cutoutYear=$(date +%Y)
