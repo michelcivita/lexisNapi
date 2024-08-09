@@ -36,14 +36,14 @@ pipelines:
                 script:
                     - apt-get install jq -y
                     - echo "Fetching Repositories"
-                    - REPOS=$(curl -X GET -u $REG_USER:$REG_P https://dckr-reg.lockton.com.br/v2/_catalog | jq '.repositories[]?')
+                    - REPOS=$(curl -X GET -u $REG_USER:$REG_P https://dckr-reg.lockton.com.br/v2/_catalog | jq 'try .repositories[]')
                     - echo $REPOS
                     - DIGESTSTOREMOVE=""
                     - >
                       for repo in $REPOS; do
                         repo=$(echo $repo | tr -d '"')
                         echo "Fetching Repository $repo Tags"
-                        TAGS=$(curl -X GET -u $REG_USER:$REG_P https://dckr-reg.lockton.com.br/v2/$repo/tags/list | jq '.tags[]?')
+                        TAGS=$(curl -X GET -u $REG_USER:$REG_P https://dckr-reg.lockton.com.br/v2/$repo/tags/list | jq 'try .tags[]')
                         echo $TAGS
                         for tag in $TAGS; do
                           tag=$(echo $tag | tr -d '"')
