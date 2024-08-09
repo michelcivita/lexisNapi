@@ -41,18 +41,22 @@ pipelines:
                     - >
                       for repo in $REPOS; do
                         repo=$(echo $repo | tr -d '"')
-                        echo $repo
-                        echo "Fetching Tags"
+                        echo "Fetching Repository $repo Tags"
                         TAGS=$(curl -X GET -u $REG_USER:$REG_P https://dckr-reg.lockton.com.br/v2/$repo/tags/list | jq '.tags[]')
                         echo $TAGS
                         for tag in $TAGS; do
                           tag=$(echo $tag | tr -d '"')
-                          echo $tag
-                          echo "Fetching Tag Manifest"
-                          manifest=$(curl --head -i -u $REG_USER:$REG_P https://dckr-reg.lockton.com.br/v2/$repo/manifests/$tag)
-                          date=$(curl -X GET -u $REG_USER:$REG_P https://dckr-reg.lockton.com.br/v2/$repo/manifests/$tag | jq -r '.history[].v1Compatibility' | jq '.created')
+                          echo "Fetching Tag $tag digest"
+                          headers=$(curl --head -i -u $REG_USER:$REG_P https://dckr-reg.lockton.com.br/v2/$repo/manifests/$tag)
+                          date=$(curl -X GET -u $REG_USER:$REG_P https://dckr-reg.lockton.com.br/v2/$repo/manifests/$tag | jq -r '.history[0].v1Compatibility' | jq '.created')
                           echo $date
-                          echo $manifest
+                          echo $headers
+                          for header in $headers; do
+                            echo $header
+                            if [ $header == "Docker-Content-Digest:" ]; then
+                              echo "next is digest id"
+                            fi
+                          done
                           break
                         done
                         break
