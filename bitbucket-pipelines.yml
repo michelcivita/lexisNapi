@@ -47,18 +47,18 @@ pipelines:
                         echo $TAGS
                         for tag in $TAGS; do
                           tag=$(echo $tag | tr -d '"')
-                          echo "Fetching Tag $tag digest"
+                          # echo "Fetching Tag $tag digest"
                           headers=$(curl --head -i -u $REG_USER:$REG_P https://dckr-reg.lockton.com.br/v2/$repo/manifests/$tag)
                           tagdate=$(curl -X GET -u $REG_USER:$REG_P https://dckr-reg.lockton.com.br/v2/$repo/manifests/$tag | jq -r '.history[0].v1Compatibility' | jq '.created')
                           tagdate=$(echo $tagdate | tr -d '"')
                           year=$(date -d $tagdate +%Y)
                           cutoutYear=$(date +%Y)
-                          cutoutYear=$(($cutoutYear - 2))
-                          echo "headers -> $headers"
-                          echo "tag date -> $tagdate"
-                          echo "cutout year -> $cutoutYear"
+                          cutoutYear=$(($cutoutYear - 1))
+                          # echo "headers -> $headers"
+                          # echo "tag date -> $tagdate"
+                          # echo "cutout year -> $cutoutYear"
                           if [ $year -le $cutoutYear ]; then
-                            echo "tag should be deleted"
+                            # echo "tag should be deleted"
                             digestNode=false
                             digest=""
                             for header in $headers; do
@@ -67,7 +67,7 @@ pipelines:
                               elif [ "$digestNode" == true ]; then
                                 digest=$header
                                 DIGESTSTOREMOVE="$DIGESTSTOREMOVE $digest"
-                                echo "tag digest -> $digest"
+                                # echo "tag digest -> $digest"
                                 break
                               fi
                             done
