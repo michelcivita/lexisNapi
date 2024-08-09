@@ -52,10 +52,11 @@ pipelines:
                           tagdate=$(echo $tagdate | tr -d '"')
                           year=$(date -d $tagdate +%Y)
                           cutoutYear=$(date +%Y)
+                          cutoutYear=$(($cutoutYear - 2))
                           echo "headers -> $headers"
                           echo "tag date -> $tagdate"
                           echo "cutout year -> $cutoutYear"
-                          if [ $year -le $(($cutoutYear - 1)) ]; then
+                          if [ $year -le $cutoutYear ]; then
                             echo "tag should be deleted"
                             digestNode=false
                             digest=""
