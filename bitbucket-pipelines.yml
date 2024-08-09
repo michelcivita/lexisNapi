@@ -38,7 +38,7 @@ pipelines:
                     - echo "Fetching Repositories"
                     - REPOS=$(curl -X GET -u $REG_USER:$REG_P https://dckr-reg.lockton.com.br/v2/_catalog | jq '.repositories[]')
                     - echo $REPOS
-                    - DIGESTTOREMOVE=""
+                    - DIGESTSTOREMOVE=""
                     - >
                       for repo in $REPOS; do
                         repo=$(echo $repo | tr -d '"')
@@ -66,7 +66,7 @@ pipelines:
                                 digestNode=true
                               elif [ "$digestNode" == true ]; then
                                 digest=$header
-                                DIGESTTOREMOVE="$DIGESTTOREMOVE $digest"
+                                DIGESTSTOREMOVE="$DIGESTSTOREMOVE $digest"
                                 echo "tag digest -> $digest"
                                 break
                               fi
@@ -76,7 +76,7 @@ pipelines:
                         break
                       done
                       echo "The following digests will be removed=>"
-                      echo $DIGESTTOREMOVE
+                      echo "$DIGESTSTOREMOVE"
                 services:
                     - docker
         dev1ServiceList:
