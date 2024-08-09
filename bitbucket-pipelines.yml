@@ -48,20 +48,26 @@ pipelines:
                           tag=$(echo $tag | tr -d '"')
                           echo "Fetching Tag $tag digest"
                           headers=$(curl --head -i -u $REG_USER:$REG_P https://dckr-reg.lockton.com.br/v2/$repo/manifests/$tag)
-                          date=$(curl -X GET -u $REG_USER:$REG_P https://dckr-reg.lockton.com.br/v2/$repo/manifests/$tag | jq -r '.history[0].v1Compatibility' | jq '.created')
+                          tagdate=$(curl -X GET -u $REG_USER:$REG_P https://dckr-reg.lockton.com.br/v2/$repo/manifests/$tag | jq -r '.history[0].v1Compatibility' | jq '.created')
+                          year=$(date -d $tagdate +%Y)
+                          cutoutYear=$(date +%Y) - 1
                           echo "headers -> $headers"
-                          echo "tag date -> $date"
-                          digestNode=false
-                          digest=""
-                          for header in $headers; do
-                            if [ $header == "Docker-Content-Digest:" ]; then
-                              digestNode=true
-                            elif [ "$digestNode" == true ]; then
-                              digest=$header
-                              echo "tag digest -> $digest"
-                              break
-                            fi
-                          done
+                          echo "tag date -> $tagdate"
+                          echo "cutout year -> $cutoutYear"
+                          if [ $year -le $cutoutYear ]; then
+                            echo "tag should be deleted"
+                            digestNode=false
+                            digest=""
+                            for header in $headers; do
+                              if [ $header == "Docker-Content-Digest:" ]; then
+                                digestNode=true
+                              elif [ "$digestNode" == true ]; then
+                                digest=$header
+                                echo "tag digest -> $digest"
+                                break
+                              fi
+                            done
+                          fi
                           break
                         done
                         break
