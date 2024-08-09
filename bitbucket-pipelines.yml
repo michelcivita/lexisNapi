@@ -75,8 +75,8 @@ pipelines:
                         done
                         break
                       done
-                      echo "The following digests will be removed=>"
-                      echo "$DIGESTSTOREMOVE"
+                    - echo "The following digests will be removed=>"
+                    - echo "$DIGESTSTOREMOVE"
                 services:
                     - docker
         dev1ServiceList:
