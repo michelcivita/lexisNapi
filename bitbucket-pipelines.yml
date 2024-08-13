@@ -37,7 +37,7 @@ pipelines:
                     - >
                       digest=sha256:c7c0bd07c7b8fb10191333d17e0bc198fb7b890b03998117b
                       repo=applocktonebback
-                      curl -X "DELETE" -u $REG_USER:$REG_P -H Accept:application/vnd.docker.distribution.manifest.v2+json -v "https://dckr-reg.lockton.com.br/v2/$repo/manifests/$digest"
+                      curl -X "DELETE" -u $REG_USER:$REG_P -H Accept:application/vnd.docker.distribution.manifest.v2+json https://dckr-reg.lockton.com.br/v2/$repo/manifests/$digest
                 services:
                     - docker
         registryDeleteImageDigests:
@@ -79,7 +79,7 @@ pipelines:
                                 digest="$header"
                                 echo "$repo tag $tag digest -> $digest will be removed"
                                 echo "$delete url: https://dckr-reg.lockton.com.br/v2/$repo/manifests/$digest"
-                                curl -X "DELETE" -u $REG_USER:$REG_P -H Accept:application/vnd.docker.distribution.manifest.v2+json "https://dckr-reg.lockton.com.br/v2/$repo/manifests/$header"
+                                curl -X "DELETE" -u $REG_USER:$REG_P -H Accept:application/vnd.docker.distribution.manifest.v2+json https://dckr-reg.lockton.com.br/v2/$repo/manifests/$digest
                                 DELETE_COUNT=$((DELETE_COUNT+1))
                                 echo "Images Deleted=$DELETE_COUNT"
                                 break
