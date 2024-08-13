@@ -39,6 +39,7 @@ pipelines:
                     - REPOS=$(curl -sS -X GET -u $REG_USER:$REG_P https://dckr-reg.lockton.com.br/v2/_catalog | jq 'try .repositories[]')
                     - echo $REPOS
                     - DELETE_COUNT=0
+                    - MAX_DELETE_COUNT=1
                     - >
                       for repo in $REPOS; do
                         repo=$(echo $repo | tr -d '"')
@@ -75,11 +76,11 @@ pipelines:
                               fi
                             done
                           fi
-                          if [ $DELETE_COUNT -ge 100 ]; then
+                          if [ $DELETE_COUNT -ge $MAX_DELETE_COUNT ]; then
                             break
                           fi
                         done
-                        if [ $DELETE_COUNT -ge 100 ]; then
+                        if [ $DELETE_COUNT -ge $MAX_DELETE_COUNT ]; then
                           break
                         fi
                       done
