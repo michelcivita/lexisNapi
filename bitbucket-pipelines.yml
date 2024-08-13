@@ -69,18 +69,18 @@ pipelines:
                                 DIGESTSTOREMOVE="$DIGESTSTOREMOVE $digest"
                                 # curl -sS -X DELETE -u $REG_USER:$REG_P https://dckr-reg.lockton.com.br/v2/$repo/manifests/$digest
                                 echo "$repo tag $tag digest -> $digest will be removed"
-                                DELETE=$((DELETE+1))
-                                echo "Deleted=$DELETE"
+                                DELETE_COUNT=$((DELETE_COUNT+1))
+                                echo "Images Deleted=$DELETE_COUNT"
                                 break
                               fi
                             done
                             break
                           fi
-                          if [ $DELETE -ge 100 ]; then
+                          if [ $DELETE_COUNT -ge 100 ]; then
                             break
                           fi
                         done
-                        if [ $DELETE -ge 100 ]; then
+                        if [ $DELETE_COUNT -ge 100 ]; then
                           break
                         fi
                       done
