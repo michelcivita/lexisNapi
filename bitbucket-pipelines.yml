@@ -71,15 +71,14 @@ pipelines:
                           if [ $year -le $cutoutYear ]; then
                             # echo "tag should be deleted"
                             digestNode=false
-                            digest=""
                             for header in $headers; do
                               if [ $header == "Docker-Content-Digest:" ]; then
                                 digestNode=true
                               elif [ "$digestNode" == true ]; then
-                                digest=$(echo $header | tr -d 'sha256:')
-                                echo "$repo tag $tag digest -> sha256:$digest will be removed"
-                                echo "$delete url: https://dckr-reg.lockton.com.br/v2/$repo/manifests/sha256:$digest"
-                                curl -X "DELETE" -u $REG_USER:$REG_P -H Accept:application/vnd.docker.distribution.manifest.v2+json -v "https://dckr-reg.lockton.com.br/v2/$repo/manifests/sha256:$digest"
+                                digest="$header"
+                                echo "$repo tag $tag digest -> $digest will be removed"
+                                echo "$delete url: https://dckr-reg.lockton.com.br/v2/$repo/manifests/$digest"
+                                curl -X "DELETE" -u $REG_USER:$REG_P -H Accept:application/vnd.docker.distribution.manifest.v2+json "https://dckr-reg.lockton.com.br/v2/$repo/manifests/sha256:$digest"
                                 DELETE_COUNT=$((DELETE_COUNT+1))
                                 echo "Images Deleted=$DELETE_COUNT"
                                 break
