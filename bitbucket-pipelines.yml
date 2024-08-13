@@ -29,7 +29,7 @@ pipelines:
                     - ansible dockerswarm3dev -i /ansibledefs/hosts -a "curl -sS -X GET -u $REG_USER:$REG_P https://dckr-reg.lockton.com.br/v2/$TARGET_PROJECT_NAME/tags/list"
                 services:
                     - docker
-        registryImageFullTagList:
+        registryDeleteImageDigests:
             - step:
                 name: Registry Full Tag List
                 runs-on: locktonbrasilrunner
@@ -67,7 +67,8 @@ pipelines:
                               elif [ "$digestNode" == true ]; then
                                 digest=$header
                                 DIGESTSTOREMOVE="$DIGESTSTOREMOVE $digest"
-                                # echo "tag digest -> $digest"
+                                # curl -sS -X DELETE -u $REG_USER:$REG_P https://dckr-reg.lockton.com.br/v2/$repo/manifests/$digest
+                                echo "tag digest -> $digest"
                                 break
                               fi
                             done
@@ -87,7 +88,7 @@ pipelines:
                       for digest in $REG_DIGESTS; do
                         digest=$(echo $digest | tr -d '"')
                         echo "Deleting Digest &digest"
-                        curl -sS -X DELETE -u $REG_USER:$REG_P https://dckr-reg.lockton.com.br/v2/$repo/manifests/$digest
+                        
                       done
                 services:
                     - docker
