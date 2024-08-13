@@ -71,7 +71,7 @@ pipelines:
                                 DIGESTSTOREMOVE="$DIGESTSTOREMOVE $digest"
                                 delete_url=$(echo "https://dckr-reg.lockton.com.br/v2/$repo/manifests/$digest")
                                 echo "$delete url: $delete_url"
-                                curl -X "DELETE" -u $REG_USER:$REG_P -H Accept:application/vnd.docker.distribution.manifest.v2+json -v "$delete_url"
+                                curl -X "DELETE" -u $REG_USER:$REG_P -H Accept:application/vnd.docker.distribution.manifest.v2+json -v $delete_url
                                 DELETE_COUNT=$((DELETE_COUNT+1))
                                 echo "Images Deleted=$DELETE_COUNT"
                                 break
