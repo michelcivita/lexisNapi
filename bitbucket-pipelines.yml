@@ -38,7 +38,7 @@ pipelines:
                     - echo "Fetching Repositories"
                     - REPOS=$(curl -sS -X GET -u $REG_USER:$REG_P https://dckr-reg.lockton.com.br/v2/_catalog | jq 'try .repositories[]')
                     - echo $REPOS
-                    - DIGESTSTOREMOVE=""
+                    - DELETE_COUNT=0
                     - >
                       for repo in $REPOS; do
                         repo=$(echo $repo | tr -d '"')
@@ -69,16 +69,21 @@ pipelines:
                                 DIGESTSTOREMOVE="$DIGESTSTOREMOVE $digest"
                                 # curl -sS -X DELETE -u $REG_USER:$REG_P https://dckr-reg.lockton.com.br/v2/$repo/manifests/$digest
                                 echo "$repo tag $tag digest -> $digest will be removed"
+                                DELETE=$((DELETE+1))
+                                echo "Deleted=$DELETE"
                                 break
                               fi
                             done
                             break
                           fi
+                          if [ $DELETE -ge 100 ]; then
+                            break
+                          fi
                         done
-                        break
+                        if [ $DELETE -ge 100 ]; then
+                          break
+                        fi
                       done
-                    - echo "The following digests should be removed=>"
-                    - echo "$DIGESTSTOREMOVE"
                 services:
                     - docker
         dev1ServiceList:
