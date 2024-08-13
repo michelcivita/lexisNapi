@@ -29,6 +29,14 @@ pipelines:
                     - ansible dockerswarm3dev -i /ansibledefs/hosts -a "curl -sS -X GET -u $REG_USER:$REG_P https://dckr-reg.lockton.com.br/v2/$TARGET_PROJECT_NAME/tags/list"
                 services:
                     - docker
+        registryDeleteDigest:
+            - step:
+                name: Registry Project Tag List
+                runs-on: locktonbrasilrunner
+                script:
+                    - curl -X "DELETE" -u $REG_USER:$REG_P https://dckr-reg.lockton.com.br/v2/applocktonebback/manifests/sha256:ec1b62f25892289ae998c802bfa3e9ca9689de7fb75ca97a52dfe25705773450
+                services:
+                    - docker
         registryDeleteImageDigests:
             - step:
                 name: Registry Full Tag List
