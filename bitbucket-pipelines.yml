@@ -74,8 +74,21 @@ pipelines:
                           fi
                         done
                       done
-                    - echo "The following digests will be removed=>"
+                    - echo "The following digests should be removed=>"
                     - echo "$DIGESTSTOREMOVE"
+                services:
+                    - docker
+        registryDeleteImageDigests:
+            - step:
+                name: Registry Delete Digests
+                runs-on: locktonbrasilrunner
+                script:
+                    - >
+                      for digest in $REG_DIGESTS; do
+                        digest=$(echo $digest | tr -d '"')
+                        echo "Deleting Digest &digest"
+                        curl -sS -X DELETE -u $REG_USER:$REG_P https://dckr-reg.lockton.com.br/v2/$repo/manifests/$digest
+                      done
                 services:
                     - docker
         dev1ServiceList:
