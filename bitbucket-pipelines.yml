@@ -72,8 +72,10 @@ pipelines:
                                 break
                               fi
                             done
+                            break
                           fi
                         done
+                        break
                       done
                     - echo "The following digests should be removed=>"
                     - echo "$DIGESTSTOREMOVE"
