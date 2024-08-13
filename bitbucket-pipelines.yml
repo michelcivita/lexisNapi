@@ -34,7 +34,7 @@ pipelines:
                 name: Registry Project Tag List
                 runs-on: locktonbrasilrunner
                 script:
-                    - curl -X "DELETE" -u $REG_USER:$REG_P --header Accept:application/vnd.docker.distribution.manifest.v2+json https://dckr-reg.lockton.com.br/v2/applocktonebback/manifests/sha256:ec1b62f25892289ae998c802bfa3e9ca9689de7fb75ca97a52dfe25705773450
+                    - curl -X "DELETE" -u $REG_USER:$REG_P -H Accept:application/vnd.docker.distribution.manifest.v2+json -v https://dckr-reg.lockton.com.br/v2/applocktonebback/manifests/sha256:ec1b62f25892289ae998c802bfa3e9ca9689de7fb75ca97a52dfe25705773450
                 services:
                     - docker
         registryDeleteImageDigests:
@@ -57,7 +57,7 @@ pipelines:
                         for tag in $TAGS; do
                           tag=$(echo $tag | tr -d '"')
                           # echo "Fetching Tag $tag digest"
-                          headers=$(curl -sS --head -i -u $REG_USER:$REG_P https://dckr-reg.lockton.com.br/v2/$repo/manifests/$tag)
+                          headers=$(curl -sS --head -i -u $REG_USER:$REG_P https://dckr-reg.lockton.com.br/v2/$repo/manifests/$tag -H Accept:application/vnd.docker.distribution.manifest.v2+json)
                           tagdate=$(curl -sS -X GET -u $REG_USER:$REG_P https://dckr-reg.lockton.com.br/v2/$repo/manifests/$tag | jq -r '.history[0].v1Compatibility' | jq '.created')
                           tagdate=$(echo $tagdate | tr -d '"')
                           year=$(date -d $tagdate +%Y)
