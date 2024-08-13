@@ -34,7 +34,7 @@ pipelines:
                 name: Registry Project Tag List
                 runs-on: locktonbrasilrunner
                 script:
-                    - curl -X "DELETE" -u $REG_USER:$REG_P https://dckr-reg.lockton.com.br/v2/applocktonebback/manifests/ec1b62f25892289ae998c802bfa3e9ca9689de7fb75ca97a52dfe25705773450
+                    - curl -X "DELETE" -u $REG_USER:$REG_P --header "Accept: application/vnd.docker.distribution.manifest.v2+json" https://dckr-reg.lockton.com.br/v2/applocktonebback/manifests/sha256:ec1b62f25892289ae998c802bfa3e9ca9689de7fb75ca97a52dfe25705773450
                 services:
                     - docker
         registryDeleteImageDigests:
@@ -77,8 +77,9 @@ pipelines:
                                 digest=$header
                                 echo "$repo tag $tag digest -> $digest will be removed"
                                 DIGESTSTOREMOVE="$DIGESTSTOREMOVE $digest"
-                                echo "delete url: https://dckr-reg.lockton.com.br/v2/$repo/manifests/$digest"
-                                # curl -X "DELETE" -u $REG_USER:$REG_P https://dckr-reg.lockton.com.br/v2/$repo/manifests/$digest
+                                delete_url=$(echo "https://dckr-reg.lockton.com.br/v2/$repo/manifests/$digest")
+                                echo "$delete url: $delete_url"
+                                curl -X "DELETE" -u $REG_USER:$REG_P $delete_url
                                 DELETE_COUNT=$((DELETE_COUNT+1))
                                 echo "Images Deleted=$DELETE_COUNT"
                                 break
