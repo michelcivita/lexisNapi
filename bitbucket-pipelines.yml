@@ -34,9 +34,10 @@ pipelines:
                 name: Registry Project Tag List
                 runs-on: locktonbrasilrunner
                 script:
-                    - digest=sha256:c7c0bd07c7b8fb10191333d17e0bc198fb7b890b03998117b
-                    - repo=applocktonebback
-                    - curl -X "DELETE" -u $REG_USER:$REG_P -H Accept:application/vnd.docker.distribution.manifest.v2+json -v "https://dckr-reg.lockton.com.br/v2/$repo/manifests/$digest"
+                    - >
+                      digest=sha256:c7c0bd07c7b8fb10191333d17e0bc198fb7b890b03998117b
+                      repo=applocktonebback
+                      curl -X "DELETE" -u $REG_USER:$REG_P -H Accept:application/vnd.docker.distribution.manifest.v2+json -v "https://dckr-reg.lockton.com.br/v2/$repo/manifests/$digest"
                 services:
                     - docker
         registryDeleteImageDigests:
