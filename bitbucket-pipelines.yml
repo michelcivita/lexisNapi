@@ -74,7 +74,6 @@ pipelines:
                                 break
                               fi
                             done
-                            break
                           fi
                           if [ $DELETE_COUNT -ge 100 ]; then
                             break
