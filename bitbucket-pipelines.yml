@@ -68,7 +68,7 @@ pipelines:
                                 digest=$header
                                 DIGESTSTOREMOVE="$DIGESTSTOREMOVE $digest"
                                 # curl -sS -X DELETE -u $REG_USER:$REG_P https://dckr-reg.lockton.com.br/v2/$repo/manifests/$digest
-                                echo "tag digest -> $digest"
+                                echo "$repo tag @tag digest -> $digest will be removed"
                                 break
                               fi
                             done
