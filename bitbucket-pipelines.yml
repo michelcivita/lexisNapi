@@ -13,6 +13,14 @@ definitions:
 
 pipelines:
     custom:
+        checkAnsibleHosts:
+            - step:
+                name: test ansible hosts
+                runs-on: locktonbrasilrunner
+                script:
+                    - ls /ansible
+                services:
+                    - docker
         registryImageList:
             - step:
                 name: Registry Project List
