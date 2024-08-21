@@ -13,8 +13,11 @@ const getDownload = async (req, res) => {
         console.log('checking if file exists');
         if (!fileExists(busName, busCountry, today)) {
             // donwload file
-            await downloadPdf(busName, busCountry);
-            await renameFile(busName, busCountry);
+            result = await downloadPdf(busName, busCountry);
+
+            if(result.match) {
+                await renameFile(busName, busCountry);
+            }
         }
         
         console.log('Sending Response');

@@ -4,6 +4,7 @@ const appSettings = require('./configuration');
 const { sleep } = require('./utilities');
 
 let lastClearDate = new Date();
+lastClearDate.setDate(lastClearDate.getDate() - 1);
 
 const getDownloadFilePath = (date) =>
     path.join(appSettings.defaultDownloadDirectory, appSettings.defaultFileName);
@@ -15,10 +16,15 @@ const fileExists = (busName, busCountry, date) =>
     fs.existsSync(getFilePath(busName, busCountry, date));
     
 
-const renameFile = async (busName, busCountry) =>
-    await fs.rename(getDownloadFilePath(), getFilePath(busName, busCountry, new Date()), (err) => {
+const renameFile = async (busName, busCountry) => {
+    const a = getDownloadFilePath();
+    const b = getFilePath(busName, busCountry, new Date());
+    console.log(`Renaming file ${a} to ${b}`);
+
+    await fs.rename(a, b, (err) => {
         if ( err ) console.log('renameFile ERROR: ' + err);
     });
+}
 
 const checkDownloadDirectories = async () => {
     const today = new Date();

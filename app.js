@@ -40,6 +40,6 @@ app.use("/swagger", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
  */
 app.get('/download', getDownload);
 
-app.listen(80, async () => {
+app.listen(port, async () => {
     console.log(`Server is running on port ${port}`);
 });
