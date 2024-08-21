@@ -18,7 +18,7 @@ pipelines:
                 name: test ansible hosts
                 runs-on: locktonbrasilrunner
                 script:
-                    - ls /ansible
+                    - ls
                 services:
                     - docker
         registryImageList:
