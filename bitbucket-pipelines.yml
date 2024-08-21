@@ -18,7 +18,7 @@ pipelines:
                 name: test ansible hosts
                 runs-on: locktonbrasilrunner
                 script:
-                    - ls
+                    - ansible dockerswarm3dev -i /ansibledefs/hosts -a "ls"
                 services:
                     - docker
         registryImageList:
