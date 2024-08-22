@@ -69,8 +69,8 @@ pipelines:
                     - echo "$REG_P" | docker login dckr-reg.lockton.com.br --username $REG_USER --password-stdin
                     - docker build -t dckr-reg.lockton.com.br/$PROJECT_NAME:$IMAGE_TAG --build-arg ENV=prod .
                     - docker push dckr-reg.lockton.com.br/$PROJECT_NAME:$IMAGE_TAG
-                    - ansible dockerswarm2pro -i /ansibledefs/hosts -a "docker login dckr-reg.lockton.com.br --username $REG_USER --password $REG_P"
-                    - ansible dockerswarm2pro -i /ansibledefs/hosts -a "docker service update --with-registry-auth --image dckr-reg.lockton.com.br/$PROJECT_NAME:$IMAGE_TAG $PROJECT_NAME"
+                    - ansible dockerswarm4svc -i /ansibledefs/hosts -a "docker login dckr-reg.lockton.com.br --username $REG_USER --password $REG_P"
+                    - ansible dockerswarm4svc -i /ansibledefs/hosts -a "docker service update --with-registry-auth --image dckr-reg.lockton.com.br/$PROJECT_NAME:$IMAGE_TAG $PROJECT_NAME"
                 services:
                     - docker
         createdev:
@@ -117,44 +117,7 @@ pipelines:
                     - echo "$REG_P" | docker login dckr-reg.lockton.com.br --username $REG_USER --password-stdin
                     - docker build -t dckr-reg.lockton.com.br/$PROJECT_NAME:$IMAGE_TAG --build-arg ENV=prod .
                     - docker push dckr-reg.lockton.com.br/$PROJECT_NAME:$IMAGE_TAG
-                    - ansible dockerswarm2pro -i /ansibledefs/hosts -a "docker login dckr-reg.lockton.com.br --username $REG_USER --password $REG_P"
-                    - ansible dockerswarm2pro -i /ansibledefs/hosts -a "docker service create -d --publish target=80,published=$PROJECT_PORT --log-driver=gelf --log-opt gelf-address=udp://logserver.lockton.com.br:12201 --log-opt tag=$PROJECT_NAME --with-registry-auth --name $PROJECT_NAME dckr-reg.lockton.com.br/$PROJECT_NAME:$IMAGE_TAG"
-                services:
-                    - docker
-        zdockercommanddevelopment:
-            - step:
-                name: Check Services
-                runs-on: locktonbrasilrunner
-                script:
-                    - ansible dockerswarm3dev -i /ansibledefs/hosts -a "docker login dckr-reg.lockton.com.br --username $REG_USER --password $REG_P"
-                    - ansible dockerswarm3dev -i /ansibledefs/hosts -a "$EXEC_COMMAND"
-                services:
-                    - docker
-        zdockerlsdevelopment:
-            - step:
-                name: Check Services
-                runs-on: locktonbrasilrunner
-                script:
-                    - ansible dockerswarm3dev -i /ansibledefs/hosts -a "docker login dckr-reg.lockton.com.br --username $REG_USER --password $REG_P"
-                    - ansible dockerswarm3dev -i /ansibledefs/hosts -a "docker service exec -it  $PROJECT_NAME-development /bin/bash"
-                    - ansible dockerswarm3dev -i /ansibledefs/hosts -a "ls"
-                services:
-                    - docker
-        zdockercommandproduction:
-            - step:
-                name: Check Services
-                runs-on: locktonbrasilrunner
-                script:
-                    - ansible dockerswarm2pro -i /ansibledefs/hosts -a "docker login dckr-reg.lockton.com.br --username $REG_USER --password $REG_P"
-                    - ansible dockerswarm2pro -i /ansibledefs/hosts -a "$EXEC_COMMAND"
-                services:
-                    - docker
-        zdockercommandstaging:
-            - step:
-                name: Check Services
-                runs-on: locktonbrasilrunner
-                script:
-                    - ansible dockerswarm1hom -i /ansibledefs/hosts -a "docker login dckr-reg.lockton.com.br --username $REG_USER --password $REG_P"
-                    - ansible dockerswarm1hom -i /ansibledefs/hosts -a "$EXEC_COMMAND"
+                    - ansible dockerswarm4svc -i /ansibledefs/hosts -a "docker login dckr-reg.lockton.com.br --username $REG_USER --password $REG_P"
+                    - ansible dockerswarm4svc -i /ansibledefs/hosts -a "docker service create -d --publish target=80,published=$PROJECT_PORT --log-driver=gelf --log-opt gelf-address=udp://logserver.lockton.com.br:12201 --log-opt tag=$PROJECT_NAME --with-registry-auth --name $PROJECT_NAME dckr-reg.lockton.com.br/$PROJECT_NAME:$IMAGE_TAG"
                 services:
                     - docker
