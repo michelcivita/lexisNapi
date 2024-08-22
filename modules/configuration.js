@@ -20,4 +20,4 @@ const configsDev = {
     port: 8000
 }
 
-module.exports = configsDev;
+module.exports = configs;
