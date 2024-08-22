@@ -18,7 +18,7 @@ pipelines:
                 name: test ansible hosts
                 runs-on: locktonbrasilrunner
                 script:
-                    - ansible dockerswarm4svc -i /ansibledefs/hosts -a "docker login dckr-reg.lockton.com.br --username $REG_USER --password $REG_P"
+                    - ansible dockerswarm4svc -vvvv -i /ansibledefs/hosts -a "docker login dckr-reg.lockton.com.br --username $REG_USER --password $REG_P"
                 services:
                     - docker
         registryImageList:
