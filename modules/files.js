@@ -1,3 +1,4 @@
+const fsp = require("fs").promises;
 const fs = require("fs");
 const path = require('path');
 const appSettings = require('./configuration');
@@ -21,7 +22,7 @@ const renameFile = async (busName, busCountry) => {
     const b = getFilePath(busName, busCountry, new Date());
     console.log(`Renaming file ${a} to ${b}`);
 
-    await fs.rename(a, b, (err) => {
+    await fsp.rename(a, b, (err) => {
         if ( err ) console.log('renameFile ERROR: ' + err);
     });
 }
@@ -40,7 +41,7 @@ const checkDownloadDirectories = async () => {
 
         let done = false;
 
-        fs.rmdir(oldPath, (err) => {
+        fsp.rmdir(oldPath, (err) => {
             if(err) {
                 console.log('checkDownloadDirectory ERROR:', err);
             }
@@ -59,7 +60,7 @@ const checkDirectory = async (directory) => {
     let done = false;
 
     if((await checkExists(directory))) {
-        fs.readdir(directory, (err, files) => {
+        fsp.readdir(directory, (err, files) => {
             done = true;
             if (err) {
                 console.log('checkDirectory ERROR: ', err); 
@@ -71,7 +72,7 @@ const checkDirectory = async (directory) => {
     }
     else {
         try {
-            fs.mkdir(directory, () => {
+            await fsp.mkdir(directory, () => {
                 done = true;
                 console.log(`checkDirectory ${directory} created`);
             });
@@ -83,6 +84,18 @@ const checkDirectory = async (directory) => {
     
     while(!done) {
         await(sleep(100));
+    }
+}
+
+const removeFile = async(path) => {
+    if (await checkExists(path)) {
+        await fsp.unlink(path, (err) => {
+            if (err) {
+              console.error('Error deleting the file:', err);
+            } else {
+              console.log('File deleted successfully!');
+            }
+          });
     }
 }
 
@@ -119,10 +132,24 @@ function getDate(date) {
     return `${yyyy}${mm}${dd}`;
 }
 
+async function fileToBase64(filePath) {
+    try {
+      // Read file data asynchronously
+      const fileData = await fsp.readFile(filePath);
+      
+      // Convert the file data to a base64 string
+      return fileData.toString('base64');
+    } catch (error) {
+      console.error('Error reading the file:', error);
+    }
+  }
+
 module.exports = {
     getDownloadFilePath: getDownloadFilePath,
     getFilePath: getFilePath,
     checkDownloadDirectories: checkDownloadDirectories,
     fileExists: fileExists,
-    renameFile: renameFile
+    renameFile: renameFile,
+    removeFile: removeFile,
+    fileToBase64: fileToBase64
 }

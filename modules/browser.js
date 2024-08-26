@@ -7,6 +7,7 @@ async function downloadPdf(busName, busCountry) {
     let browser;
     let result = {
         match: false,
+        error: '',
         queryUrl: ''
     };
 
@@ -43,6 +44,7 @@ async function downloadPdf(busName, busCountry) {
     }
     catch (ex) {
         console.log('ERROR While using the browser:' + ex);
+        result.error = `${ex}`;
     }
 
     if (browser) 

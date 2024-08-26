@@ -1,28 +1,34 @@
 const { downloadPdf } = require('./browser');
-const { getFilePath, checkDownloadDirectories, fileExists, renameFile } = require('./files');
+const { removeFile, getDownloadFilePath, fileToBase64 } = require('./files');
 
 const getDownload = async (req, res) => {
     const { busName, busCountry } = req.query;
     console.log(`Request received: ${req.headers.host} ${busName}, ${busCountry}`);
 
     try {
-        let today = new Date();
-        // remove outdated files
-        await checkDownloadDirectories();
+        let result = {
+            match: false,
+            queryUrl: '',
+            error: ``,
+            fileBase64: '' 
+        };
 
-        console.log('checking if file exists');
-        if (!fileExists(busName, busCountry, today)) {
-            // donwload file
-            result = await downloadPdf(busName, busCountry);
+        let downloadPath = getDownloadFilePath();
 
-            if(result.match) {
-                await renameFile(busName, busCountry);
-            }
-        }
+        // remove old file
+        await removeFile(downloadPath);
+
+        // faz a busca e baixa o pdf
+        Object.assign(result, await downloadPdf(busName, busCountry));
         
-        console.log('Sending Response');
-        // Send the file as a response
-        res.sendFile(getFilePath(busName, busCountry, today));
+        // retorna erro se houve algum problema ao obter o relatorio
+        if(result.error) {
+            res.status(500).send(result);
+        }
+
+        result.fileBase64 = await fileToBase64(downloadPath);
+
+        res.status(200).send(result);
     }
     catch ({ message }) {
         res.status(400).send({ error: message });
