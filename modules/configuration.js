@@ -1,7 +1,7 @@
 const configs = {
     defaultDownloadDirectory: '/home/pptruser/Downloads',
     defaultFileName: 'Result.pdf',
-    headless: false,
+    headless: true,
     baseUrl: 'https://bridger.lexisnexis.eu',
     clientId: 'LIGSLIMITEDGB',   
     userName: 'MDaniel01',
