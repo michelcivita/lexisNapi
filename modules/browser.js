@@ -31,11 +31,13 @@ async function downloadPdf(busName, busCountry) {
         if(result.match) {
             console.log(`Match found`);
             await downloadMatchesReportAsync(page);
-            result.queryUrl = page.url();
         }
-        else{
+        else {
             console.log(`No Matches found`);
+            await downloadNoMatchesReportAsync(page);
         }
+
+        result.queryUrl = page.url();
 
         // Close the browser after the file is downloaded
         await browser.close();
@@ -125,10 +127,6 @@ async function queryCustomerAsync(page, busName, busCountry) {
 }
 
 async function downloadMatchesReportAsync(page) {
-    // await Promise.all([
-    //     page.waitForNavigation()
-    // ]);
-
     await Promise.all([
         page.click("#PrintSelLink"),
         page.click("#print-select__pdf")
@@ -144,6 +142,17 @@ async function downloadMatchesReportAsync(page) {
     ]);
 
     await page.click("#pdfFormatDownloadBtn");
+
+    // Wait for the download to finish
+    console.log(`Report download starting`);
+    await awaitDownloadAsync(page);
+
+    // aguarda mais um periodo p garantir o download do arquivo (necessario devido à ao antivirus do chrome)
+    await sleep(100);
+}
+
+async function downloadNoMatchesReportAsync(page) {
+    await page.click("#reportBtn");
 
     // Wait for the download to finish
     console.log(`Report download starting`);

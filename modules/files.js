@@ -7,8 +7,11 @@ const { sleep } = require('./utilities');
 let lastClearDate = new Date();
 lastClearDate.setDate(lastClearDate.getDate() - 1);
 
-const getDownloadFilePath = (date) =>
+const getReportFilePath = () =>
     path.join(appSettings.defaultDownloadDirectory, appSettings.defaultFileName);
+
+const getNoMatchFilePath = () =>
+    path.join(appSettings.defaultDownloadDirectory, appSettings.noMatchFileName);
 
 const getFilePath = (busName, busCountry, date) => 
     path.join(appSettings.defaultDownloadDirectory, getDate(date), `${busName}-${busCountry}-report-${getDate(date)}.pdf`);
@@ -18,7 +21,7 @@ const fileExists = (busName, busCountry, date) =>
     
 
 const renameFile = async (busName, busCountry) => {
-    const a = getDownloadFilePath();
+    const a = getReportFilePath();
     const b = getFilePath(busName, busCountry, new Date());
     console.log(`Renaming file ${a} to ${b}`);
 
@@ -27,63 +30,23 @@ const renameFile = async (busName, busCountry) => {
     });
 }
 
-const checkDownloadDirectories = async () => {
-    const today = new Date();
-
+const checkDownloadDirectory = async () => {
     console.log('checking default path:');
     await checkDirectory(appSettings.defaultDownloadDirectory);
-    console.log('checking today´s path:');
-    await checkDirectory(path.join(appSettings.defaultDownloadDirectory, getDate(today)));
-
-    if (datediff(lastClearDate, today) != 0) {
-        const oldPath = path.join(appSettings.defaultDownloadDirectory, getDate(lastClearDate));
-        console.log('removing old files:');
-
-        let done = false;
-
-        fsp.rmdir(oldPath, (err) => {
-            if(err) {
-                console.log('checkDownloadDirectory ERROR:', err);
-            }
-            done = true;
-        });
-
-        lastClearDate = today;
-
-        while(!done) {
-            await(sleep(100));
-        }
-    }
 }
 
 const checkDirectory = async (directory) => {
     let done = false;
 
     if((await checkExists(directory))) {
-        fsp.readdir(directory, (err, files) => {
-            done = true;
-            if (err) {
-                console.log('checkDirectory ERROR: ', err); 
-            }
-            else {
-                console.log(`checkDirectory ${directory} items:`, files);
-            }
+        const files = await fsp.readdir(directory, (err) => {
+            console.log('checkDirectory ERROR: ', err); 
         });
+
+        console.log(`checkDirectory ${directory} items:`, files);
     }
     else {
-        try {
-            await fsp.mkdir(directory, () => {
-                done = true;
-                console.log(`checkDirectory ${directory} created`);
-            });
-        }
-        catch {
-            done = true;
-        }
-    }
-    
-    while(!done) {
-        await(sleep(100));
+        console.log(`Directory ${directory} doesn't exist!`);
     }
 }
 
@@ -95,7 +58,7 @@ const removeFile = async(path) => {
             } else {
               console.log('File deleted successfully!');
             }
-          });
+        });
     }
 }
 
@@ -145,9 +108,10 @@ async function fileToBase64(filePath) {
   }
 
 module.exports = {
-    getDownloadFilePath: getDownloadFilePath,
+    getReportFilePath: getReportFilePath,
+    getNoMatchFilePath: getNoMatchFilePath,
     getFilePath: getFilePath,
-    checkDownloadDirectories: checkDownloadDirectories,
+    checkDownloadDirectory: checkDownloadDirectory,
     fileExists: fileExists,
     renameFile: renameFile,
     removeFile: removeFile,

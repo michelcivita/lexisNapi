@@ -1,10 +1,18 @@
 const { downloadPdf } = require('./browser');
-const { removeFile, getDownloadFilePath, fileToBase64 } = require('./files');
+const { removeFile, getReportFilePath, getNoMatchFilePath, fileToBase64, checkDownloadDirectory } = require('./files');
 
 const getDownload = async (req, res) => {
     const { busName, busCountry } = req.query;
     console.log(`Request received: ${req.headers.host} ${busName}, ${busCountry}`);
 
+    const validationErrors = verifyParams(req, ['busName', 'busCountry']);
+    if(validationErrors) {
+        res.status(400).send({ error: validationErrors });
+    }
+
+    // verifica diretorio de download (pra debugar)
+    await checkDownloadDirectory();
+    
     try {
         let result = {
             match: false,
@@ -13,10 +21,12 @@ const getDownload = async (req, res) => {
             fileBase64: '' 
         };
 
-        let downloadPath = getDownloadFilePath();
+        let reportDownloadPath = getReportFilePath();
+        let noMatchDownloadPath = getNoMatchFilePath();
 
-        // remove old file
-        await removeFile(downloadPath);
+        // remove old files
+        await removeFile(reportDownloadPath);
+        await removeFile(noMatchDownloadPath);
 
         // faz a busca e baixa o pdf
         Object.assign(result, await downloadPdf(busName, busCountry));
@@ -26,15 +36,30 @@ const getDownload = async (req, res) => {
             res.status(500).send(result);
         }
 
-        result.fileBase64 = await fileToBase64(downloadPath);
+        if (result.match) {
+            result.fileBase64 = await fileToBase64(reportDownloadPath);
+        }
+        else {
+            result.fileBase64 = await fileToBase64(noMatchDownloadPath);
+        }
 
         res.status(200).send(result);
     }
     catch ({ message }) {
-        res.status(400).send({ error: message });
+        res.status(500).send({ error: message });
     }
 
     console.log(`Finished processing request: ${busName}, ${busCountry}`);
+}
+
+const verifyParams = (req, requiredParams) => {
+    const missingParams = requiredParams.filter(param => !req.query[param]);
+
+    if (missingParams.length > 0) {
+        return res.status(400).json({
+            error: `Solicitação faltando parâmetros obrigatórios: ${missingParams.join(', ')}`
+        });
+    }
 }
 
 module.exports = {
