@@ -11,8 +11,8 @@ const getDownload = async (req, res) => {
     }
 
     // verifica diretorio de download (pra debugar)
-    await checkDownloadDirectory();
-    
+    // await checkDownloadDirectory();
+
     try {
         let result = {
             match: false,
