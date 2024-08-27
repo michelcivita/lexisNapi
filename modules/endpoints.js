@@ -34,22 +34,27 @@ const getDownload = async (req, res) => {
         // retorna erro se houve algum problema ao obter o relatorio
         if(result.error) {
             res.status(500).send(result);
+            return;
         }
 
         if (result.match) {
-            result.fileBase64 = await fileToBase64(reportDownloadPath);
+            Object.assign(result, await fileToBase64(reportDownloadPath));
         }
         else {
-            result.fileBase64 = await fileToBase64(noMatchDownloadPath);
+            Object.assign(result, await fileToBase64(noMatchDownloadPath));
         }
 
-        res.status(200).send(result);
+        // retorna erro se nao foi possivel ler o arquivo
+        if(result.error) {
+            res.status(500).send(result);
+        }
+        else {
+            res.status(200).send(result);
+        }
     }
     catch ({ message }) {
         res.status(500).send({ error: message });
     }
-
-    console.log(`Finished processing request: ${busName}, ${busCountry}`);
 }
 
 const verifyParams = (req, requiredParams) => {

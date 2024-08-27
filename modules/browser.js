@@ -3,7 +3,6 @@ const appSettings = require('./configuration');
 const { sleep } = require('./utilities');
 
 async function downloadPdf(busName, busCountry) {
-    console.log('Starting file download');
     let browser;
     let result = {
         match: false,
@@ -17,7 +16,6 @@ async function downloadPdf(busName, busCountry) {
         const page = await openTab(browser);
 
         // navega pra pagina do lexis nexis
-        console.log(`Navigating to ${appSettings.baseUrl}`);
         await page.goto(appSettings.baseUrl);
     
         // efetua login no sistema
@@ -29,11 +27,9 @@ async function downloadPdf(busName, busCountry) {
         result.match = await findMatchesAsync(page);
 
         if(result.match) {
-            console.log(`Match found`);
             await downloadMatchesReportAsync(page);
         }
         else {
-            console.log(`No Matches found`);
             await downloadNoMatchesReportAsync(page);
         }
 
@@ -41,11 +37,9 @@ async function downloadPdf(busName, busCountry) {
 
         // Close the browser after the file is downloaded
         await browser.close();
-    
-        console.log('Report download finished');
     }
     catch (ex) {
-        console.log('ERROR While using the browser:' + ex);
+        console.error('ERROR While using the browser:' + ex);
         result.error = `${ex}`;
     }
 
@@ -58,8 +52,6 @@ async function downloadPdf(busName, busCountry) {
 }
 
 async function openBrowser() {
-    console.log('Opening browser');
-
     return await puppeteer.launch({ 
         headless: appSettings.headless,
         args: ['--no-sandbox', '--disable-setuid-sandbox', '--enable-logging', '--v=1']
@@ -81,7 +73,6 @@ async function openTab(browser) {
 }
 
 async function loginAsync(page) {
-    console.log(`Logging in`);
     // Fill in form fields for clientId and username
     await page.evaluate((clientId, userName) => {
         document.getElementById('ClientId').value = clientId;
@@ -106,8 +97,6 @@ async function loginAsync(page) {
 }
 
 async function queryCustomerAsync(page, busName, busCountry) {
-    console.log(`Buscando cliente ${busName}, ${busCountry}`);
-
     await Promise.all([
         page.waitForNavigation(),
         page.click("#RealTime"),
@@ -144,7 +133,6 @@ async function downloadMatchesReportAsync(page) {
     await page.click("#pdfFormatDownloadBtn");
 
     // Wait for the download to finish
-    console.log(`Report download starting`);
     await awaitDownloadAsync(page);
 
     // aguarda mais um periodo p garantir o download do arquivo (necessario devido à ao antivirus do chrome)
@@ -155,13 +143,13 @@ async function downloadNoMatchesReportAsync(page) {
     await page.click("#reportBtn");
 
     // Wait for the download to finish
-    console.log(`Report download starting`);
     await awaitDownloadAsync(page);
 
     // aguarda mais um periodo p garantir o download do arquivo (necessario devido à ao antivirus do chrome)
     await sleep(100);
 }
 
+// aguarda o botao de baixar o relatorio de correspondencia encontrada, dá timeout se não há correspondência
 async function findMatchesAsync(page) {
     try {
         await page.waitForSelector('#PrintSelLink');
@@ -177,10 +165,8 @@ async function awaitDownloadAsync(page, fileName = '') {
     return new Promise((resolve, reject) => {
         page._client().on('Page.downloadProgress', e => { // or 'Browser.downloadProgress'
             if (e.state === 'completed') {
-                console.log('download completed');
                 resolve(fileName);
             } else if (e.state === 'canceled') {
-                console.log('download cancelled');
                 reject();
             }
         });

@@ -96,15 +96,23 @@ function getDate(date) {
 }
 
 async function fileToBase64(filePath) {
+    const result = {
+        fileBase64: '',
+        error: ''
+    };
+    
     try {
       // Read file data asynchronously
       const fileData = await fsp.readFile(filePath);
       
       // Convert the file data to a base64 string
-      return fileData.toString('base64');
-    } catch (error) {
-      console.error('Error reading the file:', error);
+      result.fileBase64 = fileData.toString('base64');
+    } catch ({ message }) {
+      console.error('Error reading the file:', message);
+      result.error = message;
     }
+
+    return result;
   }
 
 module.exports = {
