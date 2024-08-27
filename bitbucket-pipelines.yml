@@ -13,14 +13,6 @@ definitions:
 
 pipelines:
     custom:
-        checkAnsibleHosts:
-            - step:
-                name: test ansible hosts
-                runs-on: locktonbrasilrunner
-                script:
-                    - ansible dockerswarm4svc -vvvv -i /ansibledefs/hosts -a "docker login dckr-reg.lockton.com.br --username $REG_USER --password $REG_P"
-                services:
-                    - docker
         registryImageList:
             - step:
                 name: Registry Project List
@@ -109,7 +101,6 @@ pipelines:
                 name: Service List Development
                 runs-on: locktonbrasilrunner
                 script:
-                    - ansible dockerswarm3dev -i /ansibledefs/hosts -a "docker login dckr-reg.lockton.com.br --username $REG_USER --password $REG_P"
                     - ansible dockerswarm3dev -i /ansibledefs/hosts -a "docker service ls"
                 services:
                     - docker
@@ -126,7 +117,6 @@ pipelines:
                 name: System Prune Development
                 runs-on: locktonbrasilrunner
                 script:
-                    - ansible dockerswarm3dev -i /ansibledefs/hosts -a "docker login dckr-reg.lockton.com.br --username $REG_USER --password $REG_P"
                     - ansible dockerswarm3dev -i /ansibledefs/hosts -a "docker system prune -f"
                 services:
                     - docker
@@ -144,17 +134,7 @@ pipelines:
                 name: Service List Staging
                 runs-on: locktonbrasilrunner
                 script:
-                    - ansible dockerswarm1hom -i /ansibledefs/hosts -a "docker login dckr-reg.lockton.com.br --username $REG_USER --password $REG_P"
                     - ansible dockerswarm1hom -i /ansibledefs/hosts -a "docker service ls"
-                services:
-                    - docker
-        homolog1ServiceInstall:
-            - step:
-                name: Service List Staging
-                runs-on: locktonbrasilrunner
-                script:
-                    - ansible dockerswarm1hom -i /ansibledefs/hosts -a "sudo apt-get install libcap2-bin"
-                    - ansible dockerswarm1hom -i /ansibledefs/hosts -a "sudo setcap cap_net_bind_service=+ep `readlink -f \`which node\``"
                 services:
                     - docker
         homolog2DiskSpace:
@@ -170,7 +150,6 @@ pipelines:
                 name: System Prune Staging
                 runs-on: locktonbrasilrunner
                 script:
-                    - ansible dockerswarm1hom -i /ansibledefs/hosts -a "docker login dckr-reg.lockton.com.br --username $REG_USER --password $REG_P"
                     - ansible dockerswarm1hom -i /ansibledefs/hosts -a "docker system prune -f"
                 services:
                     - docker
@@ -188,7 +167,6 @@ pipelines:
                 name: Service List Production
                 runs-on: locktonbrasilrunner
                 script:
-                    - ansible dockerswarm2pro -i /ansibledefs/hosts -a "docker login dckr-reg.lockton.com.br --username $REG_USER --password $REG_P"
                     - ansible dockerswarm2pro -i /ansibledefs/hosts -a "docker service ls"
                 services:
                     - docker
@@ -205,7 +183,6 @@ pipelines:
                 name: System Prune Production
                 runs-on: locktonbrasilrunner
                 script:
-                    - ansible dockerswarm2pro -i /ansibledefs/hosts -a "docker login dckr-reg.lockton.com.br --username $REG_USER --password $REG_P"
                     - ansible dockerswarm2pro -i /ansibledefs/hosts -a "docker system prune -f"
                 services:
                     - docker
@@ -214,7 +191,38 @@ pipelines:
                 name: Custom Command Production
                 runs-on: locktonbrasilrunner
                 script:
-                    - ansible dockerswarm2pro -i /ansibledefs/hosts -a "docker login dckr-reg.lockton.com.br --username $REG_USER --password $REG_P"
                     - ansible dockerswarm2pro -i /ansibledefs/hosts -a "$EXEC_COMMAND"
+                services:
+                    - docker
+        serv1ServiceList:
+            - step:
+                name: Service List Microservices
+                runs-on: locktonbrasilrunner
+                script:
+                    - ansible dockerswarm4svc -i /ansibledefs/hosts -a "docker service ls"
+                services:
+                    - docker
+        serv2DiskSpace:
+            - step:
+                name: Disk Space Microservices
+                runs-on: locktonbrasilrunner
+                script:
+                    - ansible dockerswarm4svc -i /ansibledefs/hosts -a "df -h"
+                services:
+                    - docker
+        serv3SystemPrune:
+            - step:
+                name: System Prune Microservices
+                runs-on: locktonbrasilrunner
+                script:
+                    - ansible dockerswarm4svc -i /ansibledefs/hosts -a "docker system prune -f"
+                services:
+                    - docker
+        servZCustomCommand:
+            - step:
+                name: Custom Command Microservices
+                runs-on: locktonbrasilrunner
+                script:
+                    - ansible dockerswarm4svc -i /ansibledefs/hosts -a "$EXEC_COMMAND"
                 services:
                     - docker
