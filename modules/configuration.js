@@ -6,14 +6,14 @@ const configs = {
     baseUrl: 'https://bridger.lexisnexis.eu',
     clientId: 'LIGSLIMITEDGB',   
     userName: 'MDaniel01',
-    password: 'Lockton.102',
+    password: 'Lockton.103',
     port: 80
 }
 
 const configsDev = {
     defaultDownloadDirectory: `${process.env.USERPROFILE}/Downloads`,
     defaultFileName: 'Resultados.pdf',
-    noMatchFileName: 'Nenhuma correspondÃªncia.pdf',
+    noMatchFileName: 'Nenhuma correspondência.pdf',
     headless: false,
     baseUrl: 'https://bridger.lexisnexis.eu',
     clientId: 'LIGSLIMITEDGB',   
