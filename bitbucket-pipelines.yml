@@ -196,7 +196,7 @@ pipelines:
                     - docker
         serv1ServiceList:
             - step:
-                name: Service List Microservice
+                name: Service List Microservices
                 runs-on: locktonbrasilrunner
                 script:
                     - ansible dockerswarm4svc -i /ansibledefs/hosts -a "docker service ls"
