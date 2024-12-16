@@ -101,7 +101,7 @@ pipelines:
                 name: Service List Development
                 runs-on: locktonbrasilrunner
                 script:
-                    - ansible dockerswarm3dev -i /ansibledefs/hosts -a "docker service ls"
+                    - ansible dockerswarm3dev -i /ansibledefs/hosts -a "docker service ls" -vvv
                 services:
                     - docker
         dev2DiskSpace:
