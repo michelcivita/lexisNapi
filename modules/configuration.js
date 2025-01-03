@@ -6,7 +6,7 @@ const configs = {
     baseUrl: 'https://bridger.lexisnexis.eu',
     clientId: 'LIGSLIMITEDGB',   
     userName: 'MDaniel01',
-    password: 'Lockton.103',
+    password: 'Lockton.104',
     port: 80
 }
 
@@ -18,7 +18,7 @@ const configsDev = {
     baseUrl: 'https://bridger.lexisnexis.eu',
     clientId: 'LIGSLIMITEDGB',   
     userName: 'MDaniel01',
-    password: 'Lockton.102',
+    password: 'Lockton.104',
     port: 8000
 }
 
