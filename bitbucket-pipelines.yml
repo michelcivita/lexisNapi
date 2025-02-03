@@ -120,6 +120,14 @@ pipelines:
                     - ansible dockerswarm3dev -i /ansibledefs/hosts -a "docker system prune -f"
                 services:
                     - docker
+        dev4Stats:
+            - step:
+                name: Stats Production
+                runs-on: locktonbrasilrunner
+                script:
+                    - ansible dockerswarm3dev -i /ansibledefs/hosts -a "docker stats"
+                services:
+                    - docker
         devZCustomCommand:
             - step:
                 name: Custom Command Development
@@ -153,6 +161,14 @@ pipelines:
                     - ansible dockerswarm1hom -i /ansibledefs/hosts -a "docker system prune -f"
                 services:
                     - docker
+        homolog4Stats:
+            - step:
+                name: Stats Staging
+                runs-on: locktonbrasilrunner
+                script:
+                    - ansible dockerswarm1hom -i /ansibledefs/hosts -a "docker stats"
+                services:
+                    - docker
         homologZCustomCommand:
             - step:
                 name: Custom Command Staging
@@ -184,6 +200,14 @@ pipelines:
                 runs-on: locktonbrasilrunner
                 script:
                     - ansible dockerswarm2pro -i /ansibledefs/hosts -a "docker system prune -f"
+                services:
+                    - docker
+        prod4Stats:
+            - step:
+                name: Stats Production
+                runs-on: locktonbrasilrunner
+                script:
+                    - ansible dockerswarm2pro -i /ansibledefs/hosts -a "docker stats"
                 services:
                     - docker
         prodZCustomCommand:
