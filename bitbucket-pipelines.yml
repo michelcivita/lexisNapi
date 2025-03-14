@@ -183,7 +183,7 @@ pipelines:
                 name: Service List Production
                 runs-on: locktonbrasilrunner
                 script:
-                    - ansible dockerswarm2pro -i /ansibledefs/hosts -a "docker service ls"
+                    - ansible dockerswarm2pro -i /ansibledefs/hosts -a "docker service ls --format json"
                 services:
                     - docker
         prod2DiskSpace:
