@@ -142,7 +142,7 @@ pipelines:
                 name: Service List Staging
                 runs-on: locktonbrasilrunner
                 script:
-                    - ansible dockerswarm1hom -i /ansibledefs/hosts -a "docker service ls"
+                    - ansible dockerswarm1hom -i /ansibledefs/hosts -a "docker service ls --format json"
                 services:
                     - docker
         homolog2DiskSpace:
