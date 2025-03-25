@@ -4,21 +4,21 @@ const configs = {
     noMatchFileName: 'No Matches.pdf',
     headless: true,
     baseUrl: 'https://bridger.lexisnexis.eu',
-    clientId: 'LIGSLIMITEDGB',   
+    clientId: 'LIGSLIMITEDGB',
     userName: 'MDaniel01',
-    password: 'Lockton.104',
+    password: 'Lockton.105',
     port: 80
 }
 
 const configsDev = {
     defaultDownloadDirectory: `${process.env.USERPROFILE}/Downloads`,
     defaultFileName: 'Resultados.pdf',
-    noMatchFileName: 'Nenhuma correspondência.pdf',
+    noMatchFileName: 'Nenhuma correspondÃªncia.pdf',
     headless: false,
     baseUrl: 'https://bridger.lexisnexis.eu',
-    clientId: 'LIGSLIMITEDGB',   
+    clientId: 'LIGSLIMITEDGB',
     userName: 'MDaniel01',
-    password: 'Lockton.104',
+    password: 'Lockton.105',
     port: 8000
 }
 
