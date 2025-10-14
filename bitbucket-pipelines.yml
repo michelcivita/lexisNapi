@@ -242,6 +242,14 @@ pipelines:
                     - ansible dockerswarm4svc -i /ansibledefs/hosts -a "docker system prune -f"
                 services:
                     - docker
+        serv4Stats:
+            - step:
+                name: Stats Production
+                runs-on: locktonbrasilrunner
+                script:
+                    - ansible dockerswarm4svc -i /ansibledefs/hosts -a "docker stats --no-stream"
+                services:
+                    - docker
         servZCustomCommand:
             - step:
                 name: Custom Command Microservices
