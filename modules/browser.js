@@ -10,8 +10,7 @@ let browserInstanceHolder = null;
 async function initializeBrowser(attemptNr = 0) {
     if (!await checkBrowserAvailability()) {
         try {
-            browser = await openBrowser();
-        	page = await openTab(browser);
+            await openBrowser();
 			return true;
         }
 		catch (error) {
@@ -128,11 +127,21 @@ async function downloadPdf(busName, busCountry, attemptNr = 0) {
 }
 
 async function openBrowser() {
+    // limpa a instancia irresponsiva se houver referencia
+    await disposeBrowser().catch(() => {});
 	console.log('opening browser instance');
-    return await puppeteer.launch({ 
+    
+    browser = await puppeteer.launch({ 
         headless: appSettings.headless,
         args: ['--no-sandbox', '--disable-setuid-sandbox', '--enable-logging', '--v=1']
     });
+
+    browser.on('disconnected', async () => {
+        console.warn('Browser disconnected — cleaning up');
+        await disposeBrowser().catch(() => {});
+    });
+
+    page = await openTab(browser);
 }
 
 async function openTab(browser) {
