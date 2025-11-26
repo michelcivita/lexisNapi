@@ -2,8 +2,73 @@ const puppeteer = require('puppeteer');
 const appSettings = require('./configuration');
 const { sleep } = require('./utilities');
 
-async function downloadPdf(busName, busCountry) {
-    let browser;
+let browser;
+let page;
+let browserBusy = false;
+let browserInstanceHolder = null;
+
+async function initializeBrowser(attemptNr = 0) {
+    if (!await checkBrowserAvailability()) {
+        try {
+            await openBrowser();
+			return true;
+        }
+		catch (error) {
+			console.error(`Error opening the browser (attempt #${attemptNr + 1}):`, error);
+
+			if (attemptNr < 5) {
+				await sleep(3000);
+				return await initializeBrowser(attemptNr + 1);
+			}
+
+			return false;
+		}
+    }
+	
+	console.log('browser instance available.');
+	return true;
+}
+
+async function disposeBrowser() {
+  if(!browser) {
+	return;
+  }
+
+  console.log('Disposing of browser.');
+
+  try {
+    const pages = await browser.pages();
+    for (const page of pages) {
+      await page.close();
+    }
+  } finally {
+    await browser.close();
+  }
+}
+
+async function checkBrowserAvailability() {
+	if (browserBusy) {
+		console.log(`Browser is busy with request: ${browserInstanceHolder}`);
+		await sleep(10000);
+		return checkBrowserAvailability();
+	}
+
+	if (!browser) {
+		console.log('No browser instance available.');
+		return false;
+	}
+
+	try {
+		await browser.version(); 
+		return true;
+	}
+	catch (error) {
+		console.error('Browser is not responsive:', error);
+		return false;
+	}
+}
+
+async function downloadPdf(busName, busCountry, attemptNr = 0) {
     let result = {
         match: false,
         error: '',
@@ -11,12 +76,18 @@ async function downloadPdf(busName, busCountry) {
     };
 
     try {
-        // abre o browser
-        browser = await openBrowser();
-        const page = await openTab(browser);
+		if (!await initializeBrowser()) {
+			throw `Unable to initialize browser.`;
+		}
+
+		// se registra como proprietario do browser
+		browserBusy = true;
+		browserInstanceHolder = `${busName}${busCountry}`;
 
         // navega pra pagina do lexis nexis
         await page.goto(appSettings.baseUrl);
+
+		await sleep(2000);
     
         // efetua login no sistema
         await loginAsync(page);
@@ -34,28 +105,43 @@ async function downloadPdf(busName, busCountry) {
         }
 
         result.queryUrl = page.url();
+    }
+    catch (error) {
+        console.error('ERROR While using the browser:', error);
 
-        // Close the browser after the file is downloaded
-        await browser.close();
-    }
-    catch (ex) {
-        console.error('ERROR While using the browser:' + ex);
-        result.error = `${ex}`;
-    }
+		if(attemptNr < 3) {
+			await sleep(3000);
+			return await downloadPdf(busName, busCountry, attemptNr + 1);
+		}
 
-    if (browser) 
-    {
-        await browser.close();
+        result.error = `${error}`;
     }
-    
+	finally {
+		if(browserInstanceHolder == `${busName}${busCountry}`) {
+			browserBusy = false;
+			browserInstanceHolder = null;
+		}
+	}
+
     return result;
 }
 
 async function openBrowser() {
-    return await puppeteer.launch({ 
+    // limpa a instancia irresponsiva se houver referencia
+    await disposeBrowser().catch(() => {});
+	console.log('opening browser instance');
+    
+    browser = await puppeteer.launch({ 
         headless: appSettings.headless,
         args: ['--no-sandbox', '--disable-setuid-sandbox', '--enable-logging', '--v=1']
     });
+
+    browser.on('disconnected', async () => {
+        console.warn('Browser disconnected — cleaning up');
+        await disposeBrowser().catch(() => {});
+    });
+
+    page = await openTab(browser);
 }
 
 async function openTab(browser) {
@@ -174,5 +260,6 @@ async function awaitDownloadAsync(page, fileName = '') {
 }
 
 module.exports = {
-    downloadPdf: downloadPdf
+    downloadPdf: downloadPdf,
+	dispose: disposeBrowser
 }

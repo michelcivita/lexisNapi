@@ -3,6 +3,13 @@ const swaggerJsDoc = require('swagger-jsdoc');
 const swaggerUi = require('swagger-ui-express');
 const { port } = require('./modules/configuration');
 const { getDownload } = require('./modules/endpoints');
+const { dispose } = require('./modules/browser');
+
+// Garante a finalizacao do browser se a aplicacao fechar
+process.on('SIGTERM', async () => {
+    console.log('SIGTERM received. Shutting down gracefully...');
+    await dispose();
+});
 
 const app = express();
 

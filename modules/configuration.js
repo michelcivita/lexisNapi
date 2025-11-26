@@ -13,7 +13,7 @@ const configs = {
 const configsDev = {
     defaultDownloadDirectory: `${process.env.USERPROFILE}/Downloads`,
     defaultFileName: 'Resultados.pdf',
-    noMatchFileName: 'Nenhuma correspondência.pdf',
+    noMatchFileName: 'Nenhuma correspondÃªncia.pdf',
     headless: false,
     baseUrl: 'https://bridger.lexisnexis.eu',
     clientId: 'LIGSLIMITEDGB',
