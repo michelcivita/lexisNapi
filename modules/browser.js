@@ -68,7 +68,7 @@ async function checkBrowserAvailability() {
 	}
 }
 
-async function downloadPdf(busName, busCountry, attemptNr = 0) {
+async function downloadPdf(busName, busCountry, busTaxId, busCountryCode, attemptNr = 0) {
     let result = {
         match: false,
         error: '',
@@ -93,7 +93,7 @@ async function downloadPdf(busName, busCountry, attemptNr = 0) {
         await loginAsync(page);
     
         // efetua busca pelo cliente
-        await queryCustomerAsync(page, busName, busCountry);
+        await queryCustomerAsync(page, busName, busCountry, busTaxId, busCountryCode);
 
         result.match = await findMatchesAsync(page);
 
@@ -111,7 +111,7 @@ async function downloadPdf(busName, busCountry, attemptNr = 0) {
 
 		if(attemptNr < 3) {
 			await sleep(3000);
-			return await downloadPdf(busName, busCountry, attemptNr + 1);
+			return await downloadPdf(busName, busCountry, busTaxId, busCountryCode, attemptNr + 1);
 		}
 
         result.error = `${error}`;
@@ -182,21 +182,47 @@ async function loginAsync(page) {
     ]);
 }
 
-async function queryCustomerAsync(page, busName, busCountry) {
+async function queryCustomerAsync(page, busName, busCountry, busTaxId, busCountryCode) {
     await Promise.all([
         page.waitForNavigation(),
         page.click("#RealTime"),
         page.click("#realtime__0")
     ]);
 
-    // Click on the business tab
     await page.click("#businessTabSelect");
 
-    // Fill in form fields for customerName and customerCountry
-    await page.evaluate((busName, busCountry) => {
+    // Abre o menu de campos
+    await page.evaluate(() => {
+        const menu = document.querySelector('#busIdCustomMenu');
+        if (menu) {
+            menu.style.display = 'block';
+            menu.classList.remove('hideMe');
+        }
+    });
+
+   // Seleciona o item Tax ID + fecha o menu
+    await page.evaluate(() => {
+        const item = document.querySelector('a[data-groupname="bus-other-tax"]');
+        if (item) item.click();
+
+        const menu = document.querySelector('#busIdCustomMenu');
+        if (menu) {
+            menu.style.display = 'none';
+            menu.classList.add('hideMe');
+        }
+    });
+
+    // Aguarda o HTML dos campos ser carregado na página
+    await page.waitForSelector('#bus-other-tax-id-num', { visible: true });
+    await page.waitForSelector('#bus-other-tax-country', { visible: true });
+
+    // Preencher campos
+    await page.evaluate((busName, busCountry, busTaxId, busCountryCode) => {
         document.getElementById('bus-name').value = busName;
         document.getElementById('bus-cur-addr-country').value = busCountry;
-    }, busName, busCountry);
+        document.getElementById('bus-other-tax-id-num').value = busTaxId;
+        document.getElementById('bus-other-tax-country').value = busCountryCode;
+    }, busName, busCountry, busTaxId, busCountryCode);
 
     await page.click("#toolbarSubmit");
 }

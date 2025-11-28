@@ -2,7 +2,7 @@ const { downloadPdf } = require('./browser');
 const { removeFile, getReportFilePath, getNoMatchFilePath, fileToBase64, checkDownloadDirectory } = require('./files');
 
 const getDownload = async (req, res) => {
-    const { busName, busCountry } = req.query;
+    const { busName, busCountry, busTaxId, busCountryCode } = req.query;
     console.log(`Request received: ${req.headers.host} ${busName}, ${busCountry}`);
 
     const validationErrors = verifyParams(req, ['busName', 'busCountry']);
@@ -29,7 +29,7 @@ const getDownload = async (req, res) => {
         await removeFile(noMatchDownloadPath);
 
         // faz a busca e baixa o pdf
-        Object.assign(result, await downloadPdf(busName, busCountry));
+        Object.assign(result, await downloadPdf(busName, busCountry, busTaxId, busCountryCode));
         
         // retorna erro se houve algum problema ao obter o relatorio
         if(result.error) {
