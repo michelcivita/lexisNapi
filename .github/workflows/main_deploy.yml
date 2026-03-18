@@ -1,0 +1,41 @@
+name: Build e Deploy para ACR e Azure
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 'Checkout do Código'
+        uses: actions/checkout@v4
+
+      # 1. Login no seu ACR Privado
+      - name: 'Login no Azure Container Registry'
+        uses: azure/docker-login@v1
+        with:
+          login-server: ${{ secrets.ACR_LOGIN_SERVER }}
+          username: ${{ secrets.ACR_USERNAME }}
+          password: ${{ secrets.ACR_PASSWORD }}
+
+      # 2. Build da imagem e Push para o ACR
+      # Substitua 'minha-app' pelo nome que deseja dar à imagem
+      - name: 'Build e Push da Imagem'
+        run: |
+          docker build . -t ${{ secrets.ACR_LOGIN_SERVER }}/LexisNapi:${{ github.sha }}
+          docker push ${{ secrets.ACR_LOGIN_SERVER }}/LexisNapi:${{ github.sha }}
+
+      # 3. Login na Azure (para comandos de infra)
+      - name: 'Login na Azure'
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      # 4. Atualizar o Web App para usar a nova imagem do ACR
+      - name: 'Atualizar Web App'
+        run: |
+          az webapp config container set \
+            --name lckwebapp \
+            --resource-group lockton-br-rg-devops \
+            --docker-custom-image-name ${{ secrets.ACR_LOGIN_SERVER }}/LexisNapi:${{ github.sha }}
